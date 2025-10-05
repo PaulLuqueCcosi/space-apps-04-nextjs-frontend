@@ -40,20 +40,20 @@ export default function GraphPage() {
 
   const handleNodeClick = useCallback((node: any) => {
     console.log('Nodo clickeado:', node);
-    
+
     // Si el mismo nodo ya está seleccionado, cerrarlo
     if (selectedNode && selectedNode.id === node.id && nodeDrawerOpen) {
       setNodeDrawerOpen(false);
       setSelectedNode(null);
       return;
     }
-    
+
     // Cerrar edge drawer si está abierto
     if (edgeDrawerOpen) {
       setEdgeDrawerOpen(false);
       setSelectedEdge(null);
     }
-    
+
     // Abrir/cambiar node drawer
     setSelectedNode(node);
     setNodeDrawerOpen(true);
@@ -61,20 +61,20 @@ export default function GraphPage() {
 
   const handleEdgeClick = useCallback((edge: any) => {
     console.log('Edge clickeado:', edge);
-    
+
     // Si el mismo edge ya está seleccionado, cerrarlo
     if (selectedEdge && selectedEdge.id === edge.id && edgeDrawerOpen) {
       setEdgeDrawerOpen(false);
       setSelectedEdge(null);
       return;
     }
-    
+
     // Cerrar node drawer si está abierto
     if (nodeDrawerOpen) {
       setNodeDrawerOpen(false);
       setSelectedNode(null);
     }
-    
+
     // Abrir/cambiar edge drawer
     setSelectedEdge(edge);
     setEdgeDrawerOpen(true);
@@ -128,73 +128,6 @@ export default function GraphPage() {
           )}
         </div>
       </div>
-
-      {/* Estadísticas */}
-      {data && (
-        <div className="bg-blue-50 p-4 rounded-lg">
-          <h3 className="text-lg font-semibold mb-2">Estadísticas</h3>
-          <p className="text-sm text-gray-700">
-            Nodos: {data.metadata.totalNodes}
-          </p>
-          <p className="text-sm text-gray-700">
-            Conexiones: {data.metadata.totalEdges}
-          </p>
-          {selectedCategories.length > 0 && (
-            <p className="text-xs text-blue-600 mt-2">
-              Filtrado por {selectedCategories.length} categoría{selectedCategories.length !== 1 ? 's' : ''}
-            </p>
-          )}
-        </div>
-      )}
-
-      {/* Indicadores de selección */}
-      {selectedNode && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-          <h3 className="text-sm font-semibold mb-1 text-green-800">Nodo Seleccionado</h3>
-          <p className="text-xs text-green-700 mb-2">
-            {extractDisplayName(selectedNode.label)}
-          </p>
-          <p className="text-xs text-green-600">
-            Ver detalles completos en el panel lateral →
-          </p>
-        </div>
-      )}
-
-      {selectedEdge && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-          <h3 className="text-sm font-semibold mb-1 text-blue-800">Conexión Seleccionada</h3>
-          <p className="text-xs text-blue-700 mb-2">
-            {formatRelationship(selectedEdge.label || '')}
-          </p>
-          <p className="text-xs text-blue-600">
-            Ver detalles de la conexión en el panel lateral →
-          </p>
-        </div>
-      )}
-
-      {/* Lista compacta de conexiones */}
-      {/* {data && data.edges.length > 0 && (
-        <div className="bg-white rounded-lg shadow p-4">
-          <h3 className="text-lg font-semibold mb-3">Conexiones ({data.edges.length})</h3>
-          <div className="space-y-2 max-h-60 overflow-y-auto">
-            {data.edges.slice(0, 10).map(edge => {
-              const displayLabel = formatRelationship(edge.label);
-              return (
-                <div key={edge.id} className="p-2 bg-gray-50 rounded text-xs">
-                  <div className="font-medium text-gray-800 truncate">{edge.source}</div>
-                  <div className="text-blue-600 text-center my-1">↓ {displayLabel} ↓</div>
-                  <div className="font-medium text-gray-800 truncate">{edge.target}</div>
-                </div>
-              );
-            })}
-            {data.edges.length > 10 && (
-              <div className="text-xs text-gray-500 text-center py-2">
-                ... y {data.edges.length - 10} conexiones más
-              </div>
-            )}
-          </div>
-        </div>
-      )} */}
     </div>
   );
 
@@ -259,7 +192,7 @@ export default function GraphPage() {
           onResize={setCurrentSize}
           resizable={isResizable}
         />
-        
+
         {/* Node Detail Drawer - Fixed width panel */}
         {nodeDrawerOpen && (
           <NodeDetailDrawer
