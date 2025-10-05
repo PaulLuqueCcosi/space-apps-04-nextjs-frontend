@@ -1,6 +1,7 @@
 'use client';
 
 import { Categories } from '@/services/types/graph';
+import { getCategoryDisplayName } from '@/utils/categoryUtils';
 
 interface NodeTypeSelectorProps {
   selectedCategories: string[];
@@ -39,19 +40,6 @@ export default function NodeTypeSelector({
       event.preventDefault();
       handleCategoryToggle(category);
     }
-  };
-
-  const getCategoryDisplayName = (category: string): string => {
-    const displayNames: Record<string, string> = {
-      [Categories.Publications]: 'Publicaciones',
-      [Categories.Missions]: 'Misiones',
-      [Categories.Experiments]: 'Experimentos',
-      [Categories.Authors]: 'Autores',
-      [Categories.Topic]: 'Temas',
-      [Categories.Dataset]: 'Datasets',
-      [Categories.PublicationVenue]: 'Venues de Publicación'
-    };
-    return displayNames[category] || category;
   };
 
   const isAllSelected = selectedCategories.length === Object.values(Categories).length;

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Categories } from '@/services/types/graph';
+import { getCategoryDisplayName } from '@/utils/categoryUtils';
 
 interface CategoryFilterProps {
   onFilterChange: (selectedCategories: string[]) => void;
@@ -11,19 +12,6 @@ interface CategoryFilterProps {
 export default function CategoryFilter({ onFilterChange, loading = false }: CategoryFilterProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
-
-  const getCategoryDisplayName = (category: string): string => {
-    const displayNames: Record<string, string> = {
-      [Categories.Publications]: 'Publicaciones',
-      [Categories.Missions]: 'Misiones',
-      [Categories.Experiments]: 'Experimentos',
-      [Categories.Authors]: 'Autores',
-      [Categories.Topic]: 'Temas',
-      [Categories.Dataset]: 'Datasets',
-      [Categories.PublicationVenue]: 'Venues de Publicación'
-    };
-    return displayNames[category] || category;
-  };
 
   const handleCategoryToggle = (category: string) => {
     if (loading) return;

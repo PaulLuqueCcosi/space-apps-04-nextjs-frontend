@@ -7,69 +7,14 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   MagnifyingGlassIcon,
-  DocumentTextIcon,
-  BeakerIcon,
-  RocketLaunchIcon,
-  UserIcon,
-  BuildingLibraryIcon,
-  ChatBubbleBottomCenterTextIcon,
-  CircleStackIcon,
   FunnelIcon,
   CheckIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
+import { getAllCategoryConfigs, getCategoryHeroIcon, CATEGORY_COLORS } from '@/utils/categoryUtils';
 
-interface CategoryConfig {
-  key: Categories;
-  label: string;
-  icon: React.ReactNode;
-  color: string;
-}
-
-const categoryConfigs: CategoryConfig[] = [
-  {
-    key: Categories.Publications,
-    label: 'Publicaciones',
-    icon: <DocumentTextIcon className="w-5 h-5" />,
-    color: '#48bb78',
-  },
-  {
-    key: Categories.Experiments,
-    label: 'Experimentos',
-    icon: <BeakerIcon className="w-5 h-5" />,
-    color: '#3182ce',
-  },
-  {
-    key: Categories.Missions,
-    label: 'Misiones',
-    icon: <RocketLaunchIcon className="w-5 h-5" />,
-    color: '#805ad5',
-  },
-  {
-    key: Categories.Authors,
-    label: 'Autores',
-    icon: <UserIcon className="w-5 h-5" />,
-    color: '#ed8936',
-  },
-  {
-    key: Categories.PublicationVenue,
-    label: 'Venues de Publicación',
-    icon: <BuildingLibraryIcon className="w-5 h-5" />,
-    color: '#d69e2e',
-  },
-  {
-    key: Categories.Topic,
-    label: 'Temas',
-    icon: <ChatBubbleBottomCenterTextIcon className="w-5 h-5" />,
-    color: '#e53e3e',
-  },
-  {
-    key: Categories.Dataset,
-    label: 'Datasets',
-    icon: <CircleStackIcon className="w-5 h-5" />,
-    color: '#38b2ac',
-  },
-];
+// Usar configuraciones centralizadas
+const categoryConfigs = getAllCategoryConfigs();
 
 export default function GraphSidebar() {
   const {
@@ -172,13 +117,7 @@ export default function GraphSidebar() {
                 }}
                 title={config.label}
               >
-                {config.key === Categories.Publications && <DocumentTextIcon className="w-5 h-5" />}
-                {config.key === Categories.Experiments && <BeakerIcon className="w-5 h-5" />}
-                {config.key === Categories.Missions && <RocketLaunchIcon className="w-5 h-5" />}
-                {config.key === Categories.Authors && <UserIcon className="w-5 h-5" />}
-                {config.key === Categories.PublicationVenue && <BuildingLibraryIcon className="w-5 h-5" />}
-                {config.key === Categories.Topic && <ChatBubbleBottomCenterTextIcon className="w-5 h-5" />}
-                {config.key === Categories.Dataset && <CircleStackIcon className="w-5 h-5" />}
+                {getCategoryHeroIcon(config.key, "w-5 h-5")}
               </button>
             );
           })}
@@ -275,15 +214,9 @@ export default function GraphSidebar() {
                 }}
               >
                 <span style={{ color: isSelected ? 'white' : config.color }}>
-                  {config.key === Categories.Publications && <DocumentTextIcon className="w-4 h-4" />}
-                  {config.key === Categories.Experiments && <BeakerIcon className="w-4 h-4" />}
-                  {config.key === Categories.Missions && <RocketLaunchIcon className="w-4 h-4" />}
-                  {config.key === Categories.Authors && <UserIcon className="w-4 h-4" />}
-                  {config.key === Categories.PublicationVenue && <BuildingLibraryIcon className="w-4 h-4" />}
-                  {config.key === Categories.Topic && <ChatBubbleBottomCenterTextIcon className="w-4 h-4" />}
-                  {config.key === Categories.Dataset && <CircleStackIcon className="w-4 h-4" />}
+                  {getCategoryHeroIcon(config.key, "w-4 h-4")}
                 </span>
-                <span className="text-left">{config.label}</span>
+                <span className="text-left">{config.displayName}</span>
               </button>
             );
           })}
@@ -315,7 +248,7 @@ export default function GraphSidebar() {
         <div className="flex justify-center">
           <div
             className="inline-flex items-center justify-center px-3 py-1 rounded text-xs font-medium text-white"
-            style={{ backgroundColor: '#48bb78' }}
+            style={{ backgroundColor: CATEGORY_COLORS[Categories.Publications] }}
           >
             {selectedCategories.length}/{categoryConfigs.length} activas
           </div>

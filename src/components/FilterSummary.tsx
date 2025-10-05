@@ -1,6 +1,7 @@
 'use client';
 
 import { Categories } from '@/services/types/graph';
+import { getCategoryDisplayName } from '@/utils/categoryUtils';
 
 interface FilterSummaryProps {
   selectedCategories: string[];
@@ -14,19 +15,6 @@ export default function FilterSummary({
   onClearFilters 
 }: FilterSummaryProps) {
   
-  const getCategoryDisplayName = (category: string): string => {
-    const displayNames: Record<string, string> = {
-      [Categories.Publications]: 'Publicaciones',
-      [Categories.Missions]: 'Misiones',
-      [Categories.Experiments]: 'Experimentos',
-      [Categories.Authors]: 'Autores',
-      [Categories.Topic]: 'Temas',
-      [Categories.Dataset]: 'Datasets',
-      [Categories.PublicationVenue]: 'Venues de Publicación'
-    };
-    return displayNames[category] || category;
-  };
-
   const hasFilters = selectedCategories.length > 0 || searchTerm.trim().length > 0;
 
   if (!hasFilters) {

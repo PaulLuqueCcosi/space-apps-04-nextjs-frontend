@@ -66,26 +66,7 @@ const getCategoryIcon = (category: Categories) => {
     }
 };
 
-const getCategoryColor = (category: Categories) => {
-    switch (category) {
-        case Categories.Publications:
-            return '#48bb78';
-        case Categories.Experiments:
-            return '#3182ce';
-        case Categories.Missions:
-            return '#805ad5';
-        case Categories.Authors:
-            return '#ed8936';
-        case Categories.PublicationVenue:
-            return '#d69e2e';
-        case Categories.Topic:
-            return '#e53e3e';
-        case Categories.Dataset:
-            return '#38b2ac';
-        default:
-            return '#718096';
-    }
-};
+import { getCategoryColor, getCategoryDisplayName } from '@/utils/categoryUtils';
 
 export default function EdgeDetailDrawer({
     open,

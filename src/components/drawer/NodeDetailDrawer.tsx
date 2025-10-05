@@ -38,45 +38,27 @@ interface NodeDetailDrawerProps {
   node: any | null;
 }
 
-const getCategoryIcon = (category: Categories) => {
-  switch (category) {
-    case Categories.Publications:
-      return <PaperIcon sx={{ color: '#48bb78' }} />;
-    case Categories.Experiments:
-      return <ExperimentsIcon sx={{ color: '#3182ce' }} />;
-    case Categories.Missions:
-      return <MissionsIcon sx={{ color: '#805ad5' }} />;
-    case Categories.Authors:
-      return <AuthorIcon sx={{ color: '#ed8936' }} />;
-    case Categories.PublicationVenue:
-      return <JournalIcon sx={{ color: '#d69e2e' }} />;
-    case Categories.Topic:
-      return <TopicIcon sx={{ color: '#e53e3e' }} />;
-    case Categories.Dataset:
-      return <DatasetIcon sx={{ color: '#38b2ac' }} />;
-    default:
-      return <InfoIcon sx={{ color: '#718096' }} />;
-  }
-};
+import { getCategoryColor } from '@/utils/categoryUtils';
 
-const getCategoryColor = (category: Categories) => {
+const getCategoryIcon = (category: Categories) => {
+  const color = getCategoryColor(category);
   switch (category) {
     case Categories.Publications:
-      return '#48bb78';
+      return <PaperIcon sx={{ color }} />;
     case Categories.Experiments:
-      return '#3182ce';
+      return <ExperimentsIcon sx={{ color }} />;
     case Categories.Missions:
-      return '#805ad5';
+      return <MissionsIcon sx={{ color }} />;
     case Categories.Authors:
-      return '#ed8936';
+      return <AuthorIcon sx={{ color }} />;
     case Categories.PublicationVenue:
-      return '#d69e2e';
+      return <JournalIcon sx={{ color }} />;
     case Categories.Topic:
-      return '#e53e3e';
+      return <TopicIcon sx={{ color }} />;
     case Categories.Dataset:
-      return '#38b2ac';
+      return <DatasetIcon sx={{ color }} />;
     default:
-      return '#718096';
+      return <InfoIcon sx={{ color }} />;
   }
 };
 
@@ -244,7 +226,7 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    
+
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -257,7 +239,7 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
                         Propiedades de datos
                       </Typography>
                     </Paper>
-                    
+
                     <Paper variant="outlined" sx={{ p: 2, textAlign: 'center' }}>
                       <Typography variant="h4" sx={{ color: categoryColor, fontWeight: 700 }}>
                         {node.label ? node.label.length : 0}

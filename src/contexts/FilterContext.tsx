@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { Categories } from '@/services/types/graph';
+import { getCategoryDisplayName as utilGetCategoryDisplayName } from '@/utils/categoryUtils';
 
 interface FilterContextType {
   // Filtros de categorías
@@ -41,16 +42,7 @@ export function FilterProvider({ children }: FilterProviderProps) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const getCategoryDisplayName = useCallback((category: string): string => {
-    const displayNames: Record<string, string> = {
-      [Categories.Publications]: 'Publicaciones',
-      [Categories.Missions]: 'Misiones',
-      [Categories.Experiments]: 'Experimentos',
-      [Categories.Authors]: 'Autores',
-      [Categories.Topic]: 'Temas',
-      [Categories.Dataset]: 'Datasets',
-      [Categories.PublicationVenue]: 'Venues de Publicación'
-    };
-    return displayNames[category] || category;
+    return utilGetCategoryDisplayName(category as Categories);
   }, []);
 
   const handleCategoryToggle = useCallback((category: string) => {
