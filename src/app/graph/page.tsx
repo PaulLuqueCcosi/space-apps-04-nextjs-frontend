@@ -6,7 +6,8 @@ import { extractDisplayName, formatRelationship } from '@/utils/graphUtils';
 import CategoryFilter from '@/components/CategoryFilter';
 import { Categories } from '@/models/GraphModels';
 import { GraphLayout, convertModelNodesToReagraph } from '@/components';
-import ResizableSplitPanel from '@/components/ResizableSplitPanel';
+// import ResizableSplitPanel from '@/components/ResizableSplitPanel';
+import ResizableSplitPanel from '@/components/layout/EducationMainContent';
 
 export default function GraphPage() {
   const { data, loading, error, fetchData } = useGraph();
@@ -205,12 +206,14 @@ export default function GraphPage() {
   return (
     <div className="h-screen flex flex-col">
       <ResizableSplitPanel
-        leftPanel={leftPanel}
-        rightPanel={rightPanel}
-        defaultLeftWidth={350}
-        minLeftWidth={250}
+        // leftPanel={leftPanel}
+        // rightPanel={rightPanel}
+
+        // defaultLeftWidth={350}
+        // minLeftWidth={250}
         // maxLeftWidth={500}
-        className="flex-1"
+        // className="flex-1"
+        children={[leftPanel, rightPanel]}
       />
     </div>
   );
