@@ -20,14 +20,6 @@ import {
 import {
   Close as CloseIcon,
   ExpandMore as ExpandMoreIcon,
-  Description as PaperIcon,
-  Science as ExperimentsIcon,
-  RocketLaunch as MissionsIcon,
-  Person as AuthorIcon,
-  AccountBalance as JournalIcon,
-  Topic as TopicIcon,
-  Storage as DatasetIcon,
-  Info as InfoIcon,
 } from '@mui/icons-material';
 import { Categories } from '@/models/GraphModels';
 import { extractDisplayName } from '@/utils/graphUtils';
@@ -38,29 +30,7 @@ interface NodeDetailDrawerProps {
   node: any | null;
 }
 
-import { getCategoryColor } from '@/utils/categoryUtils';
-
-const getCategoryIcon = (category: Categories) => {
-  const color = getCategoryColor(category);
-  switch (category) {
-    case Categories.Publications:
-      return <PaperIcon sx={{ color }} />;
-    case Categories.Experiments:
-      return <ExperimentsIcon sx={{ color }} />;
-    case Categories.Missions:
-      return <MissionsIcon sx={{ color }} />;
-    case Categories.Authors:
-      return <AuthorIcon sx={{ color }} />;
-    case Categories.PublicationVenue:
-      return <JournalIcon sx={{ color }} />;
-    case Categories.Topic:
-      return <TopicIcon sx={{ color }} />;
-    case Categories.Dataset:
-      return <DatasetIcon sx={{ color }} />;
-    default:
-      return <InfoIcon sx={{ color }} />;
-  }
-};
+import { getCategoryColor, getCategoryHeroIcon } from '@/utils/categoryUtils';
 
 export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDrawerProps) {
   if (!node && !open) return null;
@@ -95,7 +65,7 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1 }}>
-                {getCategoryIcon(node.data?.category || node.category)}
+                {getCategoryHeroIcon(node.data?.category || node.category)}
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Detalle del Nodo
                 </Typography>
@@ -117,7 +87,7 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
                   {displayName}
                 </Typography>
                 <Chip
-                  icon={getCategoryIcon(node.data?.category || node.category)}
+                  icon={getCategoryHeroIcon(node.data?.category || node.category)}
                   label={node.data?.category || node.category}
                   sx={{
                     backgroundColor: `${categoryColor}20`,
@@ -171,7 +141,7 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
                         primary="Categoría"
                         secondary={
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
-                            {getCategoryIcon(node.data?.category || node.category)}
+                            {getCategoryHeroIcon(node.data?.category || node.category)}
                             <Typography variant="body2">
                               {node.data?.category || node.category}
                             </Typography>
@@ -223,7 +193,7 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
               )}
 
               {/* Node Statistics */}
-              <Accordion>
+              {/* <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
 
@@ -250,7 +220,7 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
                     </Paper>
                   </Stack>
                 </AccordionDetails>
-              </Accordion>
+              </Accordion> */}
             </Box>
 
             {/* Footer */}

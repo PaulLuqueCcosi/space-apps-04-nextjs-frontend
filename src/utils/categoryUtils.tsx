@@ -66,32 +66,6 @@ export const getCategoryHeroIcon = (category: Categories, className: string = "w
   }
 };
 
-// Función para obtener el icono con color aplicado (para Material-UI)
-export const getCategoryIcon = (category: Categories, iconProps?: any) => {
-  const color = getCategoryColor(category);
-  
-  // Para Material-UI (si se necesita)
-  const muiProps = { sx: { color }, ...iconProps };
-  
-  switch (category) {
-    case Categories.Publications:
-      return React.createElement('span', muiProps, '📄'); // Placeholder para MUI icon
-    case Categories.Experiments:
-      return React.createElement('span', muiProps, '🧪');
-    case Categories.Missions:
-      return React.createElement('span', muiProps, '🚀');
-    case Categories.Authors:
-      return React.createElement('span', muiProps, '👤');
-    case Categories.PublicationVenue:
-      return React.createElement('span', muiProps, '🏛️');
-    case Categories.Topic:
-      return React.createElement('span', muiProps, '💬');
-    case Categories.Dataset:
-      return React.createElement('span', muiProps, '💾');
-    default:
-      return React.createElement('span', muiProps, 'ℹ️');
-  }
-};
 
 // Configuración completa para componentes que necesitan todo junto
 export interface CategoryConfig {
@@ -143,14 +117,3 @@ export const getReagraphCategoryConfig = (category: Categories): ReagraphCategor
     // Los iconos se pueden agregar aquí si se necesitan para reagraph
   };
 };
-
-// Mapeo de iconos para reagraph (opcional)
-export const REAGRAPH_CATEGORY_ICONS = {
-  [Categories.Publications]: '📄',
-  [Categories.Experiments]: '🧪',
-  [Categories.Missions]: '🚀',
-  [Categories.Authors]: '👨‍🔬',
-  [Categories.PublicationVenue]: '🏛️',
-  [Categories.Topic]: '🏷️',
-  [Categories.Dataset]: '📊'
-} as const;
