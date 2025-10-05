@@ -14,7 +14,8 @@ export default function GraphPage() {
   const [selectedCategories, setSelectedCategories] = useState<Categories[]>(Object.values(Categories));
   const [initialLoad, setInitialLoad] = useState(true);
   const [selectedNode, setSelectedNode] = useState<any>(null);
-
+  const [currentSize, setCurrentSize] = useState(350);
+  const [isResizable, setIsResizable] = useState(false);
   // Cargar datos solo una vez al montar y cuando cambien las categorías
   useEffect(() => {
     fetchData({ selectedCategories });
@@ -60,7 +61,7 @@ export default function GraphPage() {
     <div className="p-4 space-y-6">
       <div>
         <h2 className="text-xl font-semibold mb-4">Filtros</h2>
-        
+
         {/* Filtro de categorías con indicador de carga sutil */}
         <div className="relative">
           <CategoryFilter
@@ -159,7 +160,7 @@ export default function GraphPage() {
   const rightPanel = (
     <div className="p-4 h-full">
       <h1 className="text-3xl font-bold mb-4">Visualización del Grafo</h1>
-      
+
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           Error: {error}
@@ -204,16 +205,18 @@ export default function GraphPage() {
   );
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col mt-20">
       <ResizableSplitPanel
-        // leftPanel={leftPanel}
-        // rightPanel={rightPanel}
+        leftPanel={leftPanel}
+        rightPanel={rightPanel}
 
-        // defaultLeftWidth={350}
-        // minLeftWidth={250}
-        // maxLeftWidth={500}
-        // className="flex-1"
-        children={[leftPanel, rightPanel]}
+        defaultLeftWidth={350}
+        minLeftWidth={250}
+        maxLeftWidth={500}
+        className="flex-1"
+        onResize={setCurrentSize}
+        resizable={isResizable}
+      // children={[leftPanel, rightPanel]}
       />
     </div>
   );
