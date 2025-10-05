@@ -5,7 +5,7 @@ export class GraphAdapter {
   // Convierte filtros del frontend a request del API
   static filtersToApiRequest(filters: GraphFilters): GraphFiltersRequest {
     return {
-      categories: this.stringToCategories(filters.selectedCategories),
+      categories: filters.selectedCategories, // Ya son Categories[], no necesitan conversión
       search: filters.searchTerm
     };
   }
@@ -15,7 +15,8 @@ export class GraphAdapter {
     const params = new URLSearchParams();
     
     if (filters.selectedCategories.length > 0) {
-      params.append('categories', filters.selectedCategories.join(','));
+      // Convertir Categories[] a string para la URL
+      params.append('categories', filters.selectedCategories.map(cat => cat.toString()).join(','));
     }
     
     if (filters.searchTerm) {
