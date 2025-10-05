@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useGraph } from '@/hooks/useGraph';
 import { extractDisplayName, formatRelationship } from '@/utils/graphUtils';
 import CategoryFilter from '@/components/CategoryFilter';
@@ -10,21 +9,27 @@ import { Categories } from '@/models/GraphModels';
 export default function Home() {
   const { data, loading, error, fetchData } = useGraph();
   const [selectedCategories, setSelectedCategories] = useState<Categories[]>([]);
+  const [initialLoad, setInitialLoad] = useState(true);
 
+  // Cargar datos solo una vez al montar y cuando cambien las categorías
   useEffect(() => {
     fetchData({ selectedCategories });
-  }, [fetchData, selectedCategories]);
+    if (initialLoad) {
+      setInitialLoad(false);
+    }
+  }, [selectedCategories, fetchData]);
 
-  const handleFilterChange = (categories: string[]) => {
+  const handleFilterChange = useCallback((categories: string[]) => {
     // Convertir strings a Categories enum
     const categoryEnums = categories
       .map(cat => Object.values(Categories).find(enumValue => enumValue === cat))
       .filter(Boolean) as Categories[];
     
     setSelectedCategories(categoryEnums);
-  };
+  }, []);
 
-  if (loading) {
+  // Solo mostrar loading completo en la carga inicial
+  if (loading && initialLoad) {
     return (
       <div className="p-4">
         <h1 className="text-4xl font-bold mb-6">Datos del Grafo</h1>
@@ -35,26 +40,28 @@ export default function Home() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="p-4">
-        <h1 className="text-4xl font-bold mb-6">Datos del Grafo</h1>
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          Error: {error}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="p-4 space-y-8">
       <h1 className="text-4xl font-bold mb-6">Datos del Grafo</h1>
 
-      {/* Filtro de categorías */}
-      <CategoryFilter
-        onFilterChange={handleFilterChange}
-        loading={loading}
-      />
+      {/* Filtro de categorías con indicador de carga sutil */}
+      <div className="relative">
+        <CategoryFilter
+          onFilterChange={handleFilterChange}
+          loading={loading}
+        />
+        {loading && !initialLoad && (
+          <div className="absolute top-2 right-2 text-sm text-blue-600 animate-pulse">
+            Actualizando...
+          </div>
+        )}
+      </div>
+
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          Error: {error}
+        </div>
+      )}
 
       {data && (
         <>
