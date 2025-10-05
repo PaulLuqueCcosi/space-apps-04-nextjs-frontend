@@ -1,7 +1,15 @@
-import { GraphQueryResponse, Categories } from '@/services/types/graph';
+import { GraphDataResponse, GraphFiltersRequest, Categories } from '@/services/types/graph';
 import { GraphData, GraphFilters } from '@/models/GraphModels';
 
 export class GraphAdapter {
+  // Convierte filtros del frontend a request del API
+  static filtersToApiRequest(filters: GraphFilters): GraphFiltersRequest {
+    return {
+      categories: this.stringToCategories(filters.selectedCategories),
+      search: filters.searchTerm
+    };
+  }
+
   // Convierte filtros del frontend a parámetros de query del API
   static filtersToQueryParams(filters: GraphFilters): URLSearchParams {
     const params = new URLSearchParams();
@@ -29,8 +37,13 @@ export class GraphAdapter {
       .filter(Boolean) as Categories[];
   }
 
+  // Convierte enum a string para el frontend
+  static categoriesToString(categories: Categories[]): string[] {
+    return categories.map(cat => cat.toString());
+  }
+
   // Por ahora es una conversión directa, pero mantiene la abstracción para futuros cambios
-  static apiResponseToFrontendData(response: GraphQueryResponse): GraphData {
+  static apiResponseToFrontendData(response: GraphDataResponse): GraphData {
     return {
       nodes: response.nodes,
       edges: response.edges,

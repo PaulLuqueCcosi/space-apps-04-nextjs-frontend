@@ -9,30 +9,30 @@ export enum Categories {
   PublicationVenue = "publicationvenue"
 }
 
-// Request types
-export interface GraphQueryRequest {
+// ---------------Request types------------
+export interface GraphFiltersRequest {
   categories: Categories[];
   search?: string;
 }
 
-// Response types del API
-export interface GraphNode {
+// ------------ Response types del API --------
+export interface GraphNodeResponse {
   id: string;
   label: string;
   category: Categories;
   data: Record<string, any>;
 }
 
-export interface GraphEdge {
+export interface GraphEdgeResponse {
   id: string;
   source: string;
   target: string;
   label: string;
 }
 
-export interface GraphQueryResponse {
-  nodes: GraphNode[];
-  edges: GraphEdge[];
+export interface GraphDataResponse {
+  nodes: GraphNodeResponse[];
+  edges: GraphEdgeResponse[];
   metadata: {
     totalNodes: number;
     totalEdges: number;

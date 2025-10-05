@@ -21,12 +21,12 @@ export interface GraphData {
   metadata: {
     totalNodes: number;
     totalEdges: number;
-    categoriesQueried: string[];
+    categoriesQueried: Categories[];
   };
 }
 
 export interface GraphFilters {
-  selectedCategories: string[];
+  selectedCategories: Categories[];
   searchTerm?: string;
 }
 

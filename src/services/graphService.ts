@@ -1,4 +1,5 @@
 import { GraphData, GraphFilters, Categories } from '@/models/GraphModels';
+import { GraphAdapter } from './adapters/GraphAdapter';
 
 // Datos mock simples
 const mockData: GraphData = {
@@ -67,14 +68,7 @@ export const graphService = {
         }
 
         // Llamada real al API
-        const params = new URLSearchParams();
-        if (filters.selectedCategories.length > 0) {
-            params.append('categories', filters.selectedCategories.join(','));
-        }
-        if (filters.searchTerm) {
-            params.append('search', filters.searchTerm);
-        }
-
+        const params = GraphAdapter.filtersToQueryParams(filters);
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
         const response = await fetch(`${apiUrl}/graph/query?${params}`);
 
@@ -82,6 +76,7 @@ export const graphService = {
             throw new Error(`API Error: ${response.status}`);
         }
 
-        return response.json();
+        const apiResponse = await response.json();
+        return GraphAdapter.apiResponseToFrontendData(apiResponse);
     }
 };
