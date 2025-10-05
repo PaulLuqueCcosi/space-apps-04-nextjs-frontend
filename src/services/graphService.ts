@@ -64,25 +64,36 @@ export const graphService = {
             // Simular delay
             await new Promise(resolve => setTimeout(resolve, 500));
 
+            // Si no hay categorías seleccionadas, retornar vacío
+            if (request.categories.length === 0) {
+                return {
+                    nodes: [],
+                    edges: [],
+                    metadata: {
+                        totalNodes: 0,
+                        totalEdges: 0,
+                        categoriesQueried: []
+                    }
+                };
+            }
+
             // Filtrar datos mock según el request
             let filteredResponse = { ...mockApiResponse };
 
-            if (request.categories.length > 0) {
-                filteredResponse.nodes = mockApiResponse.nodes.filter(node =>
-                    request.categories.includes(node.category)
-                );
+            filteredResponse.nodes = mockApiResponse.nodes.filter(node =>
+                request.categories.includes(node.category)
+            );
 
-                const nodeIds = new Set(filteredResponse.nodes.map(n => n.id));
-                filteredResponse.edges = mockApiResponse.edges.filter(edge =>
-                    nodeIds.has(edge.source) && nodeIds.has(edge.target)
-                );
+            const nodeIds = new Set(filteredResponse.nodes.map(n => n.id));
+            filteredResponse.edges = mockApiResponse.edges.filter(edge =>
+                nodeIds.has(edge.source) && nodeIds.has(edge.target)
+            );
 
-                filteredResponse.metadata = {
-                    totalNodes: filteredResponse.nodes.length,
-                    totalEdges: filteredResponse.edges.length,
-                    categoriesQueried: request.categories
-                };
-            }
+            filteredResponse.metadata = {
+                totalNodes: filteredResponse.nodes.length,
+                totalEdges: filteredResponse.edges.length,
+                categoriesQueried: request.categories
+            };
 
             if (request.search) {
                 const searchLower = request.search.toLowerCase();
