@@ -15,7 +15,7 @@ export class ApiGraphService extends BaseGraphService {
     try {
       const queryParams = GraphAdapter.filtersToQueryParams(filters);
       const url = `${this.baseUrl}/graph/query?${queryParams.toString()}`;
-      
+
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -29,7 +29,7 @@ export class ApiGraphService extends BaseGraphService {
 
       const apiResponse: GraphQueryResponse = await response.json();
       return GraphAdapter.apiResponseToFrontendData(apiResponse);
-      
+
     } catch (error) {
       this.handleError(error);
     }

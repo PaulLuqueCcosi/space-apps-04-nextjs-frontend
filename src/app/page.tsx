@@ -2,20 +2,15 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useGraphService, GraphServiceFactory } from '@/services';
-import { GraphAdapter } from '@/services/adapters/GraphAdapter';
+import { useGraph } from '@/hooks/useGraph';
+import { extractDisplayName, formatRelationship } from '@/utils/graphUtils';
 
 export default function Home() {
-  const { data, loading, error, queryGraph } = useGraphService();
+  const { data, loading, error, fetchData } = useGraph();
 
   useEffect(() => {
-    // Configurar el modo del servicio desde variables de entorno
-    const serviceMode = process.env.NEXT_PUBLIC_SERVICE_MODE === 'api' ? 'api' : 'mock';
-    GraphServiceFactory.setMode(serviceMode);
-
-    // Cargar datos iniciales
-    queryGraph({ selectedCategories: [] });
-  }, [queryGraph]);
+    fetchData();
+  }, [fetchData]);
 
   if (loading) {
     return (
@@ -58,14 +53,13 @@ export default function Home() {
             <h2 className="text-2xl font-semibold mb-4">Nodes ({data.nodes.length})</h2>
             <div className="space-y-3">
               {data.nodes.map(node => {
-                const category = GraphAdapter.extractCategoryFromLabel(node.label);
-                const displayName = GraphAdapter.extractDisplayName(node.label);
+                const displayName = extractDisplayName(node.label);
 
                 return (
                   <div key={node.id} className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-50">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-sm font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded">
-                        {category}
+                        {node.category}
                       </span>
                       <span className="font-semibold">{displayName}</span>
                     </div>
@@ -92,7 +86,7 @@ export default function Home() {
             <h2 className="text-2xl font-semibold mb-4">Relationships ({data.edges.length})</h2>
             <div className="space-y-2">
               {data.edges.map(edge => {
-                const displayLabel = GraphAdapter.formatRelationshipLabel(edge.label);
+                const displayLabel = formatRelationship(edge.label);
 
                 return (
                   <div key={edge.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">

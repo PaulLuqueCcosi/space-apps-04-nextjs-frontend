@@ -1,7 +1,10 @@
+import { Categories } from '@/types/graph';
+
 // Modelos del frontend - por ahora iguales al API, pero separados para futura flexibilidad
 export interface GraphNode {
   id: string;
   label: string;
+  category: Categories;
   data: Record<string, any>;
 }
 
@@ -36,4 +39,4 @@ export interface GraphState {
 }
 
 // Re-exportamos los tipos del API como alias para mantener compatibilidad
-export type { Categories } from '@/types/graph';
+export { Categories } from '@/types/graph';

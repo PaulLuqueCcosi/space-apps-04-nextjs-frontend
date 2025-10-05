@@ -19,6 +19,7 @@ export interface GraphQueryRequest {
 export interface GraphNode {
   id: string;
   label: string;
+  category: Categories;
   data: Record<string, any>;
 }
 
