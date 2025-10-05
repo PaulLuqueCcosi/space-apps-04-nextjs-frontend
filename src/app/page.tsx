@@ -9,7 +9,7 @@ import { GraphLayout, convertModelNodesToReagraph } from '@/components';
 
 export default function Home() {
   const { data, loading, error, fetchData } = useGraph();
-  const [selectedCategories, setSelectedCategories] = useState<Categories[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<Categories[]>(Object.values(Categories));
   const [initialLoad, setInitialLoad] = useState(true);
   const [selectedNode, setSelectedNode] = useState<any>(null);
 
@@ -26,7 +26,7 @@ export default function Home() {
     const categoryEnums = categories
       .map(cat => Object.values(Categories).find(enumValue => enumValue === cat))
       .filter(Boolean) as Categories[];
-    
+
     setSelectedCategories(categoryEnums);
   }, []);
 
@@ -106,7 +106,7 @@ export default function Home() {
           {data.nodes.length > 0 && (
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-2xl font-semibold mb-4">Visualización del Grafo</h2>
-              <div className="h-[600px] w-full border rounded-lg">
+              <div className="h-[600px] w-full border rounded-lg ml-[20%]">
                 <GraphLayout
                   nodes={convertModelNodesToReagraph(data.nodes)}
                   edges={data.edges}
