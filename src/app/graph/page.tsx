@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useGraph } from '@/hooks/useGraph';
 import { extractDisplayName, formatRelationship } from '@/utils/graphUtils';
 import CategoryFilter from '@/components/filter/CategoryFilter';
+import NodeDetailDrawer from '@/components/drawer/NodeDetailDrawer';
 import { Categories } from '@/models/GraphModels';
 import { GraphLayout, convertModelNodesToReagraph } from '@/components';
 // import ResizableSplitPanel from '@/components/ResizableSplitPanel';
@@ -14,6 +15,7 @@ export default function GraphPage() {
   const [selectedCategories, setSelectedCategories] = useState<Categories[]>(Object.values(Categories));
   const [initialLoad, setInitialLoad] = useState(true);
   const [selectedNode, setSelectedNode] = useState<any>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [currentSize, setCurrentSize] = useState(350);
   const [isResizable, setIsResizable] = useState(false);
   // Cargar datos solo una vez al montar y cuando cambien las categorías
@@ -36,6 +38,11 @@ export default function GraphPage() {
   const handleNodeClick = useCallback((node: any) => {
     console.log('Nodo clickeado:', node);
     setSelectedNode(node);
+    setDrawerOpen(true);
+  }, []);
+
+  const handleCloseDrawer = useCallback(() => {
+    setDrawerOpen(false);
   }, []);
 
   const handleEdgeClick = useCallback((edge: any) => {
@@ -94,39 +101,16 @@ export default function GraphPage() {
         </div>
       )}
 
-      {/* Panel de información del nodo seleccionado */}
+      {/* Indicador de nodo seleccionado */}
       {selectedNode && (
-        <div className="bg-white rounded-lg shadow p-4">
-          <h3 className="text-lg font-semibold mb-3">Nodo Seleccionado</h3>
-          <div className="border-l-4 border-blue-500 pl-3 py-2 bg-gray-50">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded">
-                {selectedNode.data?.category}
-              </span>
-            </div>
-            <div className="font-semibold text-sm mb-1">
-              {extractDisplayName(selectedNode.label)}
-            </div>
-            <div className="text-xs text-gray-600 mb-2">
-              ID: {selectedNode.id}
-            </div>
-            {selectedNode.data && Object.keys(selectedNode.data).length > 0 && (
-              <div className="space-y-1">
-                <h4 className="font-medium text-gray-800 text-sm">Datos:</h4>
-                {Object.entries(selectedNode.data).map(([key, value]) => (
-                  <div key={key} className="text-xs text-gray-600">
-                    <strong>{key}:</strong> {String(value)}
-                  </div>
-                ))}
-              </div>
-            )}
-            <button
-              onClick={() => setSelectedNode(null)}
-              className="mt-3 px-2 py-1 bg-gray-200 text-gray-700 rounded text-xs hover:bg-gray-300"
-            >
-              Cerrar
-            </button>
-          </div>
+        <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+          <h3 className="text-sm font-semibold mb-1 text-green-800">Nodo Seleccionado</h3>
+          <p className="text-xs text-green-700 mb-2">
+            {extractDisplayName(selectedNode.label)}
+          </p>
+          <p className="text-xs text-green-600">
+            Ver detalles completos en el panel lateral →
+          </p>
         </div>
       )}
 
@@ -206,18 +190,27 @@ export default function GraphPage() {
 
   return (
     <div className="h-screen flex flex-col mt-20">
-      <ResizableSplitPanel
-        leftPanel={leftPanel}
-        rightPanel={rightPanel}
-
-        defaultLeftWidth={350}
-        minLeftWidth={250}
-        maxLeftWidth={500}
-        className="flex-1"
-        onResize={setCurrentSize}
-        resizable={isResizable}
-      // children={[leftPanel, rightPanel]}
-      />
+      <div className="flex-1 flex">
+        <ResizableSplitPanel
+          leftPanel={leftPanel}
+          rightPanel={rightPanel}
+          defaultLeftWidth={350}
+          minLeftWidth={250}
+          maxLeftWidth={500}
+          className="flex-1"
+          onResize={setCurrentSize}
+          resizable={isResizable}
+        />
+        
+        {/* Node Detail Drawer - Fixed width panel */}
+        {drawerOpen && (
+          <NodeDetailDrawer
+            open={drawerOpen}
+            onClose={handleCloseDrawer}
+            node={selectedNode}
+          />
+        )}
+      </div>
     </div>
   );
 }
