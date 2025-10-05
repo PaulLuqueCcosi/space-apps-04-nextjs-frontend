@@ -5,11 +5,13 @@ import { useGraph } from '@/hooks/useGraph';
 import { extractDisplayName, formatRelationship } from '@/utils/graphUtils';
 import CategoryFilter from '@/components/CategoryFilter';
 import { Categories } from '@/models/GraphModels';
+import { GraphLayout, convertModelNodesToReagraph } from '@/components';
 
 export default function Home() {
   const { data, loading, error, fetchData } = useGraph();
   const [selectedCategories, setSelectedCategories] = useState<Categories[]>([]);
   const [initialLoad, setInitialLoad] = useState(true);
+  const [selectedNode, setSelectedNode] = useState<any>(null);
 
   // Cargar datos solo una vez al montar y cuando cambien las categorías
   useEffect(() => {
@@ -26,6 +28,17 @@ export default function Home() {
       .filter(Boolean) as Categories[];
     
     setSelectedCategories(categoryEnums);
+  }, []);
+
+  const handleNodeClick = useCallback((node: any) => {
+    console.log('Nodo clickeado:', node);
+    setSelectedNode(node);
+  }, []);
+
+  const handleEdgeClick = useCallback((edge: any) => {
+    console.log('Edge clickeado:', edge);
+    const displayLabel = formatRelationship(edge.label || '');
+    alert(`Conexión: ${edge.source} → ${displayLabel} → ${edge.target}`);
   }, []);
 
   // Solo mostrar loading completo en la carga inicial
@@ -89,61 +102,74 @@ export default function Home() {
             )}
           </div>
 
-          {/* Lista de Nodos */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-2xl font-semibold mb-4">Nodos ({data.nodes.length})</h2>
-            <div className="space-y-3">
-              {data.nodes.map(node => {
-                const displayName = extractDisplayName(node.label);
+          {/* Grafo Interactivo */}
+          {data.nodes.length > 0 && (
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-2xl font-semibold mb-4">Visualización del Grafo</h2>
+              <div className="h-[600px] w-full border rounded-lg">
+                <GraphLayout
+                  nodes={convertModelNodesToReagraph(data.nodes)}
+                  edges={data.edges}
+                  onNodeClick={handleNodeClick}
+                  onEdgeClick={handleEdgeClick}
+                  labelType="all"
+                />
+              </div>
+            </div>
+          )}
 
-                return (
-                  <div key={node.id} className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-50">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded">
-                        {node.category}
-                      </span>
-                      <span className="font-semibold">{displayName}</span>
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      ID: {node.id}
-                    </div>
-                    {Object.keys(node.data).length > 0 && (
-                      <div className="text-sm text-gray-600 mt-1">
-                        {Object.entries(node.data).map(([key, value]) => (
-                          <span key={key} className="mr-3">
-                            <strong>{key}:</strong> {String(value)}
-                          </span>
-                        ))}
+          {/* Panel de información del nodo seleccionado */}
+          {selectedNode && (
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-2xl font-semibold mb-4">Información del Nodo</h2>
+              <div className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-50">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded">
+                    {selectedNode.data?.category}
+                  </span>
+                  <span className="font-semibold text-lg">{extractDisplayName(selectedNode.label)}</span>
+                </div>
+                <div className="text-sm text-gray-600 mb-2">
+                  ID: {selectedNode.id}
+                </div>
+                {selectedNode.data && Object.keys(selectedNode.data).length > 0 && (
+                  <div className="space-y-1">
+                    <h4 className="font-medium text-gray-800">Datos adicionales:</h4>
+                    {Object.entries(selectedNode.data).map(([key, value]) => (
+                      <div key={key} className="text-sm text-gray-600">
+                        <strong>{key}:</strong> {String(value)}
                       </div>
-                    )}
+                    ))}
                   </div>
-                );
-              })}
+                )}
+                <button
+                  onClick={() => setSelectedNode(null)}
+                  className="mt-3 px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300"
+                >
+                  Cerrar
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Lista de Relaciones */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-2xl font-semibold mb-4">Relaciones ({data.edges.length})</h2>
-            <div className="space-y-2">
-              {data.edges.map(edge => {
-                const displayLabel = formatRelationship(edge.label);
-
-                return (
-                  <div key={edge.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
-                    <div className="flex items-center space-x-3">
-                      <span className="font-medium text-gray-800">{edge.source}</span>
-                      <span className="text-gray-400">→</span>
-                      <span className="text-blue-600 font-medium">{displayLabel}</span>
-                      <span className="text-gray-400">→</span>
-                      <span className="font-medium text-gray-800">{edge.target}</span>
+          {/* Lista compacta de conexiones */}
+          {data.edges.length > 0 && (
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-2xl font-semibold mb-4">Conexiones ({data.edges.length})</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {data.edges.map(edge => {
+                  const displayLabel = formatRelationship(edge.label);
+                  return (
+                    <div key={edge.id} className="p-3 bg-gray-50 rounded text-sm">
+                      <div className="font-medium text-gray-800 truncate">{edge.source}</div>
+                      <div className="text-blue-600 text-center my-1">↓ {displayLabel} ↓</div>
+                      <div className="font-medium text-gray-800 truncate">{edge.target}</div>
                     </div>
-                    <span className="text-xs text-gray-500">ID: {edge.id}</span>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
         </>
       )}
     </div>
