@@ -1,4 +1,4 @@
-import { GraphQueryResponse, Categories } from '@/types/graph';
+import { GraphQueryResponse, Categories } from '@/services/types/graph';
 import { GraphData, GraphFilters } from '@/models/GraphModels';
 
 export class GraphAdapter {

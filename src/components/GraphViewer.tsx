@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useGraphService } from '@/services';
-import { Categories } from '@/types/graph';
+import { Categories } from '@/services/types/graph';
 import { GraphAdapter } from '@/services/adapters/GraphAdapter';
 
 export default function GraphViewer() {

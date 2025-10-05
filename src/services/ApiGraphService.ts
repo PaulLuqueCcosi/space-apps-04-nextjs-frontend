@@ -1,6 +1,6 @@
 import { BaseGraphService } from './abstractions/IGraphService';
 import { GraphData, GraphFilters } from '@/models/GraphModels';
-import { GraphQueryResponse } from '@/types/graph';
+import { GraphQueryResponse } from '@/services/types/graph';
 import { GraphAdapter } from './adapters/GraphAdapter';
 
 export class ApiGraphService extends BaseGraphService {
