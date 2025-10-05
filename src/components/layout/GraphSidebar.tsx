@@ -3,7 +3,73 @@
 import React from 'react';
 import { useFilter } from '@/contexts/FilterContext';
 import { Categories } from '@/services/types/graph';
-import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  MagnifyingGlassIcon,
+  DocumentTextIcon,
+  BeakerIcon,
+  RocketLaunchIcon,
+  UserIcon,
+  BuildingLibraryIcon,
+  ChatBubbleBottomCenterTextIcon,
+  CircleStackIcon,
+  FunnelIcon,
+  CheckIcon,
+  XMarkIcon
+} from '@heroicons/react/24/outline';
+
+interface CategoryConfig {
+  key: Categories;
+  label: string;
+  icon: React.ReactNode;
+  color: string;
+}
+
+const categoryConfigs: CategoryConfig[] = [
+  {
+    key: Categories.Publications,
+    label: 'Publicaciones',
+    icon: <DocumentTextIcon className="w-5 h-5" />,
+    color: '#48bb78',
+  },
+  {
+    key: Categories.Experiments,
+    label: 'Experimentos',
+    icon: <BeakerIcon className="w-5 h-5" />,
+    color: '#3182ce',
+  },
+  {
+    key: Categories.Missions,
+    label: 'Misiones',
+    icon: <RocketLaunchIcon className="w-5 h-5" />,
+    color: '#805ad5',
+  },
+  {
+    key: Categories.Authors,
+    label: 'Autores',
+    icon: <UserIcon className="w-5 h-5" />,
+    color: '#ed8936',
+  },
+  {
+    key: Categories.PublicationVenue,
+    label: 'Venues de Publicación',
+    icon: <BuildingLibraryIcon className="w-5 h-5" />,
+    color: '#d69e2e',
+  },
+  {
+    key: Categories.Topic,
+    label: 'Temas',
+    icon: <ChatBubbleBottomCenterTextIcon className="w-5 h-5" />,
+    color: '#e53e3e',
+  },
+  {
+    key: Categories.Dataset,
+    label: 'Datasets',
+    icon: <CircleStackIcon className="w-5 h-5" />,
+    color: '#38b2ac',
+  },
+];
 
 export default function GraphSidebar() {
   const {
@@ -16,138 +82,252 @@ export default function GraphSidebar() {
     sidebarCollapsed,
     setSidebarCollapsed,
     loading,
-    getCategoryDisplayName,
     isAllCategoriesSelected,
   } = useFilter();
 
+  // Función para manejar la búsqueda
+  const handleSearch = () => {
+    // Crear objeto con todos los filtros y búsqueda
+    const searchData = {
+      searchQuery: searchQuery.trim(),
+      selectedCategories: selectedCategories,
+      timestamp: new Date().toISOString(),
+      totalFilters: selectedCategories.length
+    };
+
+    // Log para debugging
+    console.log('Búsqueda realizada con filtros:', searchData);
+
+    // Aquí puedes agregar lógica adicional:
+    // - Enviar a analytics
+    // - Llamar APIs específicas
+    // - Guardar en localStorage
+    // - Enviar eventos personalizados
+
+    // Ejemplo de evento personalizado
+    // if (typeof window !== 'undefined') {
+    //   window.dispatchEvent(new CustomEvent('graphSearch', {
+    //     detail: searchData
+    //   }));
+    // }
+
+    // También puedes llamar funciones del contexto si necesitas
+    // realizar acciones específicas con los datos combinados
+  };
+
+  // Manejar Enter en el input de búsqueda
+  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearch();
+    }
+  };
+
   if (sidebarCollapsed) {
     return (
-      <div className="w-16 bg-white border-r border-gray-200 flex flex-col items-center py-4">
-        {/* Toggle button */}
-        <button
-          onClick={() => setSidebarCollapsed(false)}
-          className="p-2 rounded-lg hover:bg-gray-100 transition-colors mb-4"
-          title="Expandir sidebar"
-        >
-          <ChevronRightIcon className="w-5 h-5 text-gray-600" />
-        </button>
-        
-        {/* Compact indicators */}
-        <div className="flex flex-col items-center space-y-3">
-          {/* Search indicator */}
-          {searchQuery && (
-            <div className="w-2 h-2 bg-blue-500 rounded-full" title={`Búsqueda: ${searchQuery}`} />
-          )}
-          
-          {/* Category filter indicator */}
-          {selectedCategories.length > 0 && selectedCategories.length < Object.values(Categories).length && (
-            <div className="w-2 h-2 bg-green-500 rounded-full" title={`${selectedCategories.length} categorías seleccionadas`} />
-          )}
+      <div className="w-16 bg-gray-50 border-r border-gray-200 flex flex-col overflow-hidden transition-all duration-300 ease-in-out">
+        {/* Header compacto */}
+        <div className="p-2 bg-gray-700 text-white flex flex-col items-center justify-center">
+          <button
+            onClick={() => setSidebarCollapsed(false)}
+            className="p-1 rounded hover:bg-white/10 transition-colors"
+            title="Expandir filtros"
+          >
+            <ChevronRightIcon className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Search compacto - con el mismo espacing que las categorías */}
+        <div className="p-1">
+          <button
+            onClick={() => setSidebarCollapsed(false)}
+            className={'w-full h-10 rounded-lg transition-colors bg-gray-100 hover:bg-gray-200 text-black border border-gray-300'}
+            title={searchQuery ? `Búsqueda: ${searchQuery}` : "Abrir búsqueda"}
+          >
+            <MagnifyingGlassIcon className="w-5 h-5 stroke-1 mx-auto" />
+          </button>
+        </div>
+
+        {/* Línea separadora sutil */}
+        <div className="mx-2 my-2 border-t border-gray-300"></div>
+
+        {/* Iconos de categorías clickeables */}
+        <div className="flex-1 p-1 space-y-1">
+          {categoryConfigs.map((config) => {
+            const isSelected = selectedCategories.includes(config.key);
+
+            return (
+              <button
+                key={config.key}
+                onClick={() => handleCategoryToggle(config.key)}
+                disabled={loading}
+                className={`w-full h-10 rounded-lg border-2 transition-all duration-200 flex items-center justify-center ${isSelected
+                  ? 'border-opacity-100 shadow-sm'
+                  : 'border-gray-300 hover:border-opacity-100'
+                  } ${loading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                style={{
+                  backgroundColor: isSelected ? config.color : 'transparent',
+                  borderColor: isSelected ? config.color : '#e0e0e0',
+                  color: isSelected ? 'white' : config.color,
+                }}
+                title={config.label}
+              >
+                {config.key === Categories.Publications && <DocumentTextIcon className="w-5 h-5" />}
+                {config.key === Categories.Experiments && <BeakerIcon className="w-5 h-5" />}
+                {config.key === Categories.Missions && <RocketLaunchIcon className="w-5 h-5" />}
+                {config.key === Categories.Authors && <UserIcon className="w-5 h-5" />}
+                {config.key === Categories.PublicationVenue && <BuildingLibraryIcon className="w-5 h-5" />}
+                {config.key === Categories.Topic && <ChatBubbleBottomCenterTextIcon className="w-5 h-5" />}
+                {config.key === Categories.Dataset && <CircleStackIcon className="w-5 h-5" />}
+              </button>
+            );
+          })}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="w-80 bg-white border-r border-gray-200 flex flex-col h-full">
+    <div className="w-80 bg-gray-50 border-r border-gray-200 flex flex-col h-full overflow-hidden transition-all duration-300 ease-in-out">
       {/* Header */}
-      <div className="p-4 border-b border-gray-200">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-800">Filtros</h2>
+      <div className="p-2 bg-gray-700 text-white">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <FunnelIcon className="w-4 h-4" />
+            <h2 className="text-sm font-semibold uppercase tracking-wide">Filtros</h2>
+          </div>
           <button
             onClick={() => setSidebarCollapsed(true)}
-            className="p-1 rounded hover:bg-gray-100 transition-colors"
+            className="p-1 rounded hover:bg-white/10 transition-colors"
             title="Contraer sidebar"
           >
-            <ChevronLeftIcon className="w-5 h-5 text-gray-600" />
+            <ChevronLeftIcon className="w-4 h-4" />
           </button>
         </div>
-        
-        {/* Search */}
-        <div className="relative">
-          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Buscar..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            disabled={loading}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-          />
+      </div>
+
+      {/* Search Section - Separada */}
+      <div className="p-3 bg-white border-b border-gray-200">
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Buscar..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
+              disabled={loading}
+              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-white text-gray-900"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <XMarkIcon className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          {/* Botón de búsqueda */}
           {searchQuery && (
             <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              onClick={handleSearch}
+              disabled={loading}
+              className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+              title="Buscar"
             >
-              ×
+              <MagnifyingGlassIcon className="w-4 h-4" />
             </button>
           )}
         </div>
+
       </div>
 
       {/* Filters Content */}
       <div className="flex-1 overflow-y-auto p-4">
-        {/* Category Filters */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-md font-medium text-gray-700">Categorías</h3>
-            {loading && (
-              <div className="text-xs text-blue-600 animate-pulse">
-                Actualizando...
-              </div>
-            )}
-          </div>
-
-          {/* Action buttons */}
-          <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={handleSelectAllCategories}
-              disabled={loading}
-              className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 disabled:opacity-50 transition-colors"
-            >
-              {isAllCategoriesSelected ? 'Deseleccionar todo' : 'Seleccionar todo'}
-            </button>
-            <button
-              onClick={handleClearAllCategories}
-              disabled={loading}
-              className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 disabled:opacity-50 transition-colors"
-            >
-              Limpiar filtros
-            </button>
-          </div>
-
-          {/* Category checkboxes */}
-          <div className="space-y-2">
-            {Object.values(Categories).map(category => (
-              <label
-                key={category}
-                className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
-                  selectedCategories.includes(category)
-                    ? 'bg-blue-50 border-blue-200 shadow-sm'
-                    : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
-                } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedCategories.includes(category)}
-                  onChange={() => handleCategoryToggle(category)}
-                  disabled={loading}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <span className="text-sm text-gray-700 select-none flex-1">
-                  {getCategoryDisplayName(category)}
-                </span>
-              </label>
-            ))}
-          </div>
-
-          {/* Selection summary */}
-          {selectedCategories.length > 0 && (
-            <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg border border-blue-200">
-              <span className="font-medium">Filtros activos:</span> {selectedCategories.length} de {Object.values(Categories).length} categorías seleccionadas
-            </div>
-          )}
+        {/* Section Title */}
+        <div className="mb-4">
+          <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1">
+            Relationship Type
+          </h3>
+          <div className="h-0.5 bg-gray-700 w-10"></div>
         </div>
+
+        {/* Category Buttons */}
+        <div className="space-y-2 mb-4">
+          {categoryConfigs.map((config) => {
+            const isSelected = selectedCategories.includes(config.key);
+
+            return (
+              <button
+                key={config.key}
+                onClick={() => handleCategoryToggle(config.key)}
+                disabled={loading}
+                className={`w-full flex items-center justify-start gap-3 py-2 px-3 rounded-lg border-2 transition-all duration-200 text-sm font-medium min-h-8 ${isSelected
+                  ? 'text-white shadow-sm'
+                  : 'text-gray-700 hover:border-opacity-100'
+                  } ${loading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                style={{
+                  backgroundColor: isSelected ? config.color : 'transparent',
+                  borderColor: isSelected ? config.color : '#d1d5db',
+                }}
+              >
+                <span style={{ color: isSelected ? 'white' : config.color }}>
+                  {config.key === Categories.Publications && <DocumentTextIcon className="w-4 h-4" />}
+                  {config.key === Categories.Experiments && <BeakerIcon className="w-4 h-4" />}
+                  {config.key === Categories.Missions && <RocketLaunchIcon className="w-4 h-4" />}
+                  {config.key === Categories.Authors && <UserIcon className="w-4 h-4" />}
+                  {config.key === Categories.PublicationVenue && <BuildingLibraryIcon className="w-4 h-4" />}
+                  {config.key === Categories.Topic && <ChatBubbleBottomCenterTextIcon className="w-4 h-4" />}
+                  {config.key === Categories.Dataset && <CircleStackIcon className="w-4 h-4" />}
+                </span>
+                <span className="text-left">{config.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="border-t border-gray-300 my-2"></div>
+
+        {/* Control buttons */}
+        <div className="flex gap-1 mb-4">
+          <button
+            onClick={handleSelectAllCategories}
+            disabled={loading || isAllCategoriesSelected}
+            className="p-2 rounded text-green-600 hover:bg-green-50 disabled:opacity-60 transition-colors"
+            title="Seleccionar todo"
+          >
+            <CheckIcon className="w-4 h-4" />
+          </button>
+          <button
+            onClick={handleClearAllCategories}
+            disabled={loading || selectedCategories.length === 0}
+            className="p-2 rounded text-red-600 hover:bg-red-50 disabled:opacity-60 transition-colors"
+            title="Limpiar todo"
+          >
+            <XMarkIcon className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Selected count indicator */}
+        <div className="flex justify-center">
+          <div
+            className="inline-flex items-center justify-center px-3 py-1 rounded text-xs font-medium text-white"
+            style={{ backgroundColor: '#48bb78' }}
+          >
+            {selectedCategories.length}/{categoryConfigs.length} activas
+          </div>
+        </div>
+
+        {loading && (
+          <div className="text-center mt-2">
+            <div className="text-xs text-gray-600">
+              Actualizando...
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
