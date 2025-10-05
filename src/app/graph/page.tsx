@@ -6,9 +6,8 @@ import { extractDisplayName, formatRelationship } from '@/utils/graphUtils';
 import CategoryFilter from '@/components/CategoryFilter';
 import { Categories } from '@/models/GraphModels';
 import { GraphLayout, convertModelNodesToReagraph } from '@/components';
-import { GraphCanvas } from 'reagraph';
 
-export default function Home() {
+export default function GraphPage() {
   const { data, loading, error, fetchData } = useGraph();
   const [selectedCategories, setSelectedCategories] = useState<Categories[]>(Object.values(Categories));
   const [initialLoad, setInitialLoad] = useState(true);
@@ -114,10 +113,6 @@ export default function Home() {
                   onNodeClick={handleNodeClick}
                   onEdgeClick={handleEdgeClick}
                   labelType="nodes"
-                  // className="h-full w-full"
-                  // cameraMode='rotate'
-                  // draggable={true}
-                  
                 />
               </div>
             </div>
