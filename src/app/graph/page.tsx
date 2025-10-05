@@ -40,23 +40,45 @@ export default function GraphPage() {
 
   const handleNodeClick = useCallback((node: any) => {
     console.log('Nodo clickeado:', node);
+    
+    // Si el mismo nodo ya está seleccionado, cerrarlo
+    if (selectedNode && selectedNode.id === node.id && nodeDrawerOpen) {
+      setNodeDrawerOpen(false);
+      setSelectedNode(null);
+      return;
+    }
+    
     // Cerrar edge drawer si está abierto
-    setEdgeDrawerOpen(false);
-    setSelectedEdge(null);
-    // Abrir node drawer
+    if (edgeDrawerOpen) {
+      setEdgeDrawerOpen(false);
+      setSelectedEdge(null);
+    }
+    
+    // Abrir/cambiar node drawer
     setSelectedNode(node);
     setNodeDrawerOpen(true);
-  }, []);
+  }, [selectedNode, nodeDrawerOpen, edgeDrawerOpen]);
 
   const handleEdgeClick = useCallback((edge: any) => {
     console.log('Edge clickeado:', edge);
+    
+    // Si el mismo edge ya está seleccionado, cerrarlo
+    if (selectedEdge && selectedEdge.id === edge.id && edgeDrawerOpen) {
+      setEdgeDrawerOpen(false);
+      setSelectedEdge(null);
+      return;
+    }
+    
     // Cerrar node drawer si está abierto
-    setNodeDrawerOpen(false);
-    setSelectedNode(null);
-    // Abrir edge drawer
+    if (nodeDrawerOpen) {
+      setNodeDrawerOpen(false);
+      setSelectedNode(null);
+    }
+    
+    // Abrir/cambiar edge drawer
     setSelectedEdge(edge);
     setEdgeDrawerOpen(true);
-  }, []);
+  }, [selectedEdge, edgeDrawerOpen, nodeDrawerOpen]);
 
   const handleCloseNodeDrawer = useCallback(() => {
     setNodeDrawerOpen(false);
