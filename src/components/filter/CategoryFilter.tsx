@@ -31,6 +31,7 @@ import { Categories } from '@/models/GraphModels';
 interface CategoryFilterProps {
   onFilterChange: (categories: string[]) => void;
   loading?: boolean;
+  onCompactModeChange?: (isCompact: boolean) => void;
 }
 
 interface CategoryConfig {
@@ -85,7 +86,7 @@ const categoryConfigs: CategoryConfig[] = [
   },
 ];
 
-export default function CategoryFilter({ onFilterChange, loading = false }: CategoryFilterProps) {
+export default function CategoryFilter({ onFilterChange, loading = false, onCompactModeChange }: CategoryFilterProps) {
   const [selectedCategories, setSelectedCategories] = React.useState<Categories[]>(
     Object.values(Categories)
   );
@@ -112,7 +113,9 @@ export default function CategoryFilter({ onFilterChange, loading = false }: Cate
   };
 
   const handleToggleExpanded = () => {
-    setExpanded(!expanded);
+    const newExpanded = !expanded;
+    setExpanded(newExpanded);
+    onCompactModeChange?.(!newExpanded); // Notificar al padre sobre el cambio de modo
   };
 
   return (

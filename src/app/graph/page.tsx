@@ -20,7 +20,8 @@ export default function GraphPage() {
   const [nodeDrawerOpen, setNodeDrawerOpen] = useState(false);
   const [edgeDrawerOpen, setEdgeDrawerOpen] = useState(false);
   const [currentSize, setCurrentSize] = useState(350);
-  const [isResizable, setIsResizable] = useState(false);
+  const [isResizable, setIsResizable] = useState(true);
+  const [filterCompactMode, setFilterCompactMode] = useState(false);
   // Cargar datos solo una vez al montar y cuando cambien las categorías
   useEffect(() => {
     fetchData({ selectedCategories });
@@ -95,6 +96,16 @@ export default function GraphPage() {
     alert(`Comparando:\n${extractDisplayName(sourceNode.label)}\nvs\n${extractDisplayName(targetNode.label)}`);
   }, []);
 
+  const handleFilterCompactModeChange = useCallback((isCompact: boolean) => {
+    setFilterCompactMode(isCompact);
+    // Ajustar el tamaño del panel cuando cambie el modo
+    if (isCompact) {
+      setCurrentSize(80); // Ancho mínimo para sidebar compacto
+    } else {
+      setCurrentSize(350); // Ancho normal
+    }
+  }, []);
+
 
 
   // Solo mostrar loading completo en la carga inicial
@@ -111,22 +122,25 @@ export default function GraphPage() {
 
   // Panel izquierdo - Filtros y controles
   const leftPanel = (
-    <div className="p-4 space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Filtros</h2>
-
-        {/* Filtro de categorías con indicador de carga sutil */}
-        <div className="relative">
-          <CategoryFilter
-            onFilterChange={handleFilterChange}
-            loading={loading}
-          />
-          {loading && !initialLoad && (
-            <div className="mt-2 text-sm text-blue-600 animate-pulse">
-              Actualizando...
-            </div>
-          )}
+    <div className={`${filterCompactMode ? 'p-2' : 'p-4'} space-y-6 h-full`}>
+      {!filterCompactMode && (
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Filtros</h2>
         </div>
+      )}
+
+      {/* Filtro de categorías con indicador de carga sutil */}
+      <div className="relative">
+        <CategoryFilter
+          onFilterChange={handleFilterChange}
+          loading={loading}
+          onCompactModeChange={handleFilterCompactModeChange}
+        />
+        {loading && !initialLoad && !filterCompactMode && (
+          <div className="mt-2 text-sm text-blue-600 animate-pulse">
+            Actualizando...
+          </div>
+        )}
       </div>
     </div>
   );
@@ -185,12 +199,13 @@ export default function GraphPage() {
         <ResizableSplitPanel
           leftPanel={leftPanel}
           rightPanel={rightPanel}
-          defaultLeftWidth={350}
-          minLeftWidth={250}
-          maxLeftWidth={500}
+          defaultLeftWidth={filterCompactMode ? 80 : 350}
+          minLeftWidth={filterCompactMode ? 60 : 250}
+          maxLeftWidth={filterCompactMode ? 350 : 500}
           className="flex-1"
           onResize={setCurrentSize}
           resizable={isResizable}
+          compactMode={filterCompactMode}
         />
 
         {/* Node Detail Drawer - Fixed width panel */}

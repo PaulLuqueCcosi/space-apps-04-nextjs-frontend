@@ -244,7 +244,7 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    Estadísticas
+                    
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
