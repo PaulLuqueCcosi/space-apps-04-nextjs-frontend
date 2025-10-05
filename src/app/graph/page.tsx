@@ -5,6 +5,7 @@ import { useGraph } from '@/hooks/useGraph';
 import { extractDisplayName, formatRelationship } from '@/utils/graphUtils';
 import CategoryFilter from '@/components/filter/CategoryFilter';
 import NodeDetailDrawer from '@/components/drawer/NodeDetailDrawer';
+import EdgeDetailDrawer from '@/components/drawer/EdgeDetailDrawer';
 import { Categories } from '@/models/GraphModels';
 import { GraphLayout, convertModelNodesToReagraph } from '@/components';
 // import ResizableSplitPanel from '@/components/ResizableSplitPanel';
@@ -15,7 +16,9 @@ export default function GraphPage() {
   const [selectedCategories, setSelectedCategories] = useState<Categories[]>(Object.values(Categories));
   const [initialLoad, setInitialLoad] = useState(true);
   const [selectedNode, setSelectedNode] = useState<any>(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedEdge, setSelectedEdge] = useState<any>(null);
+  const [nodeDrawerOpen, setNodeDrawerOpen] = useState(false);
+  const [edgeDrawerOpen, setEdgeDrawerOpen] = useState(false);
   const [currentSize, setCurrentSize] = useState(350);
   const [isResizable, setIsResizable] = useState(false);
   // Cargar datos solo una vez al montar y cuando cambien las categorías
@@ -37,19 +40,40 @@ export default function GraphPage() {
 
   const handleNodeClick = useCallback((node: any) => {
     console.log('Nodo clickeado:', node);
+    // Cerrar edge drawer si está abierto
+    setEdgeDrawerOpen(false);
+    setSelectedEdge(null);
+    // Abrir node drawer
     setSelectedNode(node);
-    setDrawerOpen(true);
-  }, []);
-
-  const handleCloseDrawer = useCallback(() => {
-    setDrawerOpen(false);
+    setNodeDrawerOpen(true);
   }, []);
 
   const handleEdgeClick = useCallback((edge: any) => {
     console.log('Edge clickeado:', edge);
-    const displayLabel = formatRelationship(edge.label || '');
-    alert(`Conexión: ${edge.source} → ${displayLabel} → ${edge.target}`);
+    // Cerrar node drawer si está abierto
+    setNodeDrawerOpen(false);
+    setSelectedNode(null);
+    // Abrir edge drawer
+    setSelectedEdge(edge);
+    setEdgeDrawerOpen(true);
   }, []);
+
+  const handleCloseNodeDrawer = useCallback(() => {
+    setNodeDrawerOpen(false);
+  }, []);
+
+  const handleCloseEdgeDrawer = useCallback(() => {
+    setEdgeDrawerOpen(false);
+  }, []);
+
+  const handleCompareNodes = useCallback((sourceNode: any, targetNode: any) => {
+    console.log('Comparando nodos:', sourceNode, targetNode);
+    // Aquí puedes implementar la lógica de comparación
+    // Por ejemplo, abrir un modal de comparación o navegar a una página de comparación
+    alert(`Comparando:\n${extractDisplayName(sourceNode.label)}\nvs\n${extractDisplayName(targetNode.label)}`);
+  }, []);
+
+
 
   // Solo mostrar loading completo en la carga inicial
   if (loading && initialLoad) {
@@ -101,7 +125,7 @@ export default function GraphPage() {
         </div>
       )}
 
-      {/* Indicador de nodo seleccionado */}
+      {/* Indicadores de selección */}
       {selectedNode && (
         <div className="bg-green-50 border border-green-200 rounded-lg p-3">
           <h3 className="text-sm font-semibold mb-1 text-green-800">Nodo Seleccionado</h3>
@@ -110,6 +134,18 @@ export default function GraphPage() {
           </p>
           <p className="text-xs text-green-600">
             Ver detalles completos en el panel lateral →
+          </p>
+        </div>
+      )}
+
+      {selectedEdge && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+          <h3 className="text-sm font-semibold mb-1 text-blue-800">Conexión Seleccionada</h3>
+          <p className="text-xs text-blue-700 mb-2">
+            {formatRelationship(selectedEdge.label || '')}
+          </p>
+          <p className="text-xs text-blue-600">
+            Ver detalles de la conexión en el panel lateral →
           </p>
         </div>
       )}
@@ -203,11 +239,22 @@ export default function GraphPage() {
         />
         
         {/* Node Detail Drawer - Fixed width panel */}
-        {drawerOpen && (
+        {nodeDrawerOpen && (
           <NodeDetailDrawer
-            open={drawerOpen}
-            onClose={handleCloseDrawer}
+            open={nodeDrawerOpen}
+            onClose={handleCloseNodeDrawer}
             node={selectedNode}
+          />
+        )}
+
+        {/* Edge Detail Drawer - Fixed width panel */}
+        {edgeDrawerOpen && (
+          <EdgeDetailDrawer
+            open={edgeDrawerOpen}
+            onClose={handleCloseEdgeDrawer}
+            edge={selectedEdge}
+            nodes={data?.nodes || null}
+            onCompare={handleCompareNodes}
           />
         )}
       </div>
