@@ -8,9 +8,9 @@ export default function EducationLayout({
 }) {
     return (
         <FilterProvider>
-            <div className="min-h-screen w-full overflow-x-hidden" style={{ backgroundColor: 'rgb(250, 250, 250)' }}>
+            <div className="h-screen w-full overflow-hidden flex flex-col" style={{ backgroundColor: 'rgb(250, 250, 250)' }}>
                 <EducationNavbar />
-                <div className="flex-1">
+                <div className="flex-1 overflow-hidden pt-16">
                     {children}
                 </div>
             </div>

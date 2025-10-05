@@ -78,7 +78,7 @@ export default function GraphPage() {
   // Solo mostrar loading completo en la carga inicial
   if (loading && !data) {
     return (
-      <div className="h-screen flex flex-col mt-20">
+      <div className="h-full flex flex-col">
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -90,79 +90,80 @@ export default function GraphPage() {
   }
 
   return (
-    <div className="h-screen flex flex-col mt-20">
-      <div className="flex-1 flex">
-        {/* Sidebar */}
+    <div className="h-full flex flex-row overflow-hidden">
+      {/* Sidebar - Always visible */}
+      <div className="flex-shrink-0">
         <GraphSidebar />
-
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col">
-          <div className="p-4 h-full">
-            <h1 className="text-3xl font-bold mb-4">Visualización del Grafo</h1>
-
-            {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                Error: {error}
-              </div>
-            )}
-
-            {data && (
-              <>
-                {/* Mensaje cuando no hay resultados */}
-                {data.nodes.length === 0 && selectedCategories.length > 0 && (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                    <h3 className="text-lg font-medium text-yellow-800 mb-2">Sin resultados</h3>
-                    <p className="text-yellow-700">
-                      No se encontraron nodos para las categorías seleccionadas.
-                      Intenta seleccionar diferentes categorías o limpiar los filtros.
-                    </p>
-                  </div>
-                )}
-
-                {/* Grafo Interactivo */}
-                {data.nodes.length > 0 && (
-                  <div className="bg-white rounded-lg shadow h-full flex flex-col">
-                    <div className="p-4 border-b">
-                      <h2 className="text-xl font-semibold">Grafo Interactivo</h2>
-                    </div>
-                    <div className="flex-1 p-4">
-                      <div className="h-full w-full border rounded-lg">
-                        <GraphLayout
-                          nodes={convertModelNodesToReagraph(data.nodes)}
-                          edges={data.edges}
-                          onNodeClick={handleNodeClick}
-                          onEdgeClick={handleEdgeClick}
-                          labelType="all"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Node Detail Drawer - Fixed width panel */}
-        {nodeDrawerOpen && (
-          <NodeDetailDrawer
-            open={nodeDrawerOpen}
-            onClose={handleCloseNodeDrawer}
-            node={selectedNode}
-          />
-        )}
-
-        {/* Edge Detail Drawer - Fixed width panel */}
-        {edgeDrawerOpen && (
-          <EdgeDetailDrawer
-            open={edgeDrawerOpen}
-            onClose={handleCloseEdgeDrawer}
-            edge={selectedEdge}
-            nodes={data?.nodes || null}
-            onCompare={handleCompareNodes}
-          />
-        )}
       </div>
-    </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-h-0">
+        <div className="p-2 sm:p-4 h-full flex flex-col">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4">Visualización del Grafo</h1>
+
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-3 sm:px-4 py-2 sm:py-3 rounded mb-2 sm:mb-4 text-sm sm:text-base">
+              Error: {error}
+            </div>
+          )}
+
+          {data && (
+            <>
+              {/* Mensaje cuando no hay resultados */}
+              {data.nodes.length === 0 && selectedCategories.length > 0 && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 sm:p-4 mb-2 sm:mb-4">
+                  <h3 className="text-base sm:text-lg font-medium text-yellow-800 mb-1 sm:mb-2">Sin resultados</h3>
+                  <p className="text-sm sm:text-base text-yellow-700">
+                    No se encontraron nodos para las categorías seleccionadas.
+                    Intenta seleccionar diferentes categorías o limpiar los filtros.
+                  </p>
+                </div>
+              )}
+
+              {/* Grafo Interactivo */}
+              {data.nodes.length > 0 && (
+                <div className="bg-white rounded-lg shadow flex-1 flex flex-col min-h-0">
+                  <div className="p-2 sm:p-4 border-b flex-shrink-0">
+                    <h2 className="text-lg sm:text-xl font-semibold">Grafo Interactivo</h2>
+                  </div>
+                  <div className="flex-1 p-2 sm:p-4 min-h-0">
+                    <div className="h-full w-full border rounded-lg overflow-hidden">
+                      <GraphLayout
+                        nodes={convertModelNodesToReagraph(data.nodes)}
+                        edges={data.edges}
+                        onNodeClick={handleNodeClick}
+                        onEdgeClick={handleEdgeClick}
+                        labelType="all"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Node Detail Drawer - Responsive positioning */}
+      {nodeDrawerOpen && (
+        <NodeDetailDrawer
+          open={nodeDrawerOpen}
+          onClose={handleCloseNodeDrawer}
+          node={selectedNode}
+        />
+      )}
+
+      {/* Edge Detail Drawer - Responsive positioning */}
+      {edgeDrawerOpen && (
+        <EdgeDetailDrawer
+          open={edgeDrawerOpen}
+          onClose={handleCloseEdgeDrawer}
+          edge={selectedEdge}
+          nodes={data?.nodes || null}
+          onCompare={handleCompareNodes}
+        />
+      )}
+      {/* </div> */}
+    </div >
   );
 }
