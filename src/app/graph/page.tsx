@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useGraph } from '@/hooks/useGraph';
 import { extractDisplayName, formatRelationship } from '@/utils/graphUtils';
-import CategoryFilter from '@/components/CategoryFilter';
+import CategoryFilter from '@/components/filter/CategoryFilter';
 import { Categories } from '@/models/GraphModels';
 import { GraphLayout, convertModelNodesToReagraph } from '@/components';
 // import ResizableSplitPanel from '@/components/ResizableSplitPanel';
