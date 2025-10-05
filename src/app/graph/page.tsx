@@ -123,9 +123,9 @@ export default function GraphPage() {
               {/* Grafo Interactivo */}
               {data.nodes.length > 0 && (
                 <div className="bg-white rounded-lg shadow flex-1 flex flex-col min-h-0">
-                  <div className="p-2 sm:p-4 border-b flex-shrink-0">
+                  {/* <div className="p-2 sm:p-4 border-b flex-shrink-0">
                     <h2 className="text-lg sm:text-xl font-semibold">Grafo Interactivo</h2>
-                  </div>
+                  </div> */}
                   <div className="flex-1 p-2 sm:p-4 min-h-0">
                     <div className="h-full w-full border rounded-lg overflow-hidden">
                       <GraphLayout
