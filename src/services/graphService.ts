@@ -1,8 +1,7 @@
-import { GraphData, GraphFilters, Categories } from '@/models/GraphModels';
-import { GraphAdapter } from './adapters/GraphAdapter';
+import { Categories, GraphDataResponse, GraphFiltersRequest } from '@/services/types/graph';
 
-// Datos mock simples
-const mockData: GraphData = {
+// Datos mock usando tipos del API
+const mockApiResponse: GraphDataResponse = {
     nodes: [
         {
             id: "1",
@@ -56,19 +55,65 @@ const mockData: GraphData = {
     }
 };
 
-// Servicio simple que puede ser mock o API
+// Servicio que siempre usa tipos del API
 export const graphService = {
-    async queryGraph(filters: GraphFilters = { selectedCategories: [] }): Promise<GraphData> {
+    async queryGraph(request: GraphFiltersRequest): Promise<GraphDataResponse> {
         const isMock = process.env.NEXT_PUBLIC_SERVICE_MODE !== 'api';
 
         if (isMock) {
             // Simular delay
             await new Promise(resolve => setTimeout(resolve, 500));
-            return mockData;
+
+            // Filtrar datos mock según el request
+            let filteredResponse = { ...mockApiResponse };
+
+            if (request.categories.length > 0) {
+                filteredResponse.nodes = mockApiResponse.nodes.filter(node =>
+                    request.categories.includes(node.category)
+                );
+
+                const nodeIds = new Set(filteredResponse.nodes.map(n => n.id));
+                filteredResponse.edges = mockApiResponse.edges.filter(edge =>
+                    nodeIds.has(edge.source) && nodeIds.has(edge.target)
+                );
+
+                filteredResponse.metadata = {
+                    totalNodes: filteredResponse.nodes.length,
+                    totalEdges: filteredResponse.edges.length,
+                    categoriesQueried: request.categories
+                };
+            }
+
+            if (request.search) {
+                const searchLower = request.search.toLowerCase();
+                filteredResponse.nodes = filteredResponse.nodes.filter(node =>
+                    node.label.toLowerCase().includes(searchLower) ||
+                    Object.values(node.data).some(value =>
+                        String(value).toLowerCase().includes(searchLower)
+                    )
+                );
+
+                const nodeIds = new Set(filteredResponse.nodes.map(n => n.id));
+                filteredResponse.edges = filteredResponse.edges.filter(edge =>
+                    nodeIds.has(edge.source) && nodeIds.has(edge.target)
+                );
+
+                filteredResponse.metadata.totalNodes = filteredResponse.nodes.length;
+                filteredResponse.metadata.totalEdges = filteredResponse.edges.length;
+            }
+
+            return filteredResponse;
         }
 
         // Llamada real al API
-        const params = GraphAdapter.filtersToQueryParams(filters);
+        const params = new URLSearchParams();
+        if (request.categories.length > 0) {
+            params.append('categories', request.categories.join(','));
+        }
+        if (request.search) {
+            params.append('search', request.search);
+        }
+
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
         const response = await fetch(`${apiUrl}/graph/query?${params}`);
 
@@ -76,7 +121,6 @@ export const graphService = {
             throw new Error(`API Error: ${response.status}`);
         }
 
-        const apiResponse = await response.json();
-        return GraphAdapter.apiResponseToFrontendData(apiResponse);
+        return response.json();
     }
 };
