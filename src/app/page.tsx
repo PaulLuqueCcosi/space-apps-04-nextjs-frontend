@@ -6,6 +6,7 @@ import { extractDisplayName, formatRelationship } from '@/utils/graphUtils';
 import CategoryFilter from '@/components/CategoryFilter';
 import { Categories } from '@/models/GraphModels';
 import { GraphLayout, convertModelNodesToReagraph } from '@/components';
+import { GraphCanvas } from 'reagraph';
 
 export default function Home() {
   const { data, loading, error, fetchData } = useGraph();
@@ -106,13 +107,17 @@ export default function Home() {
           {data.nodes.length > 0 && (
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-2xl font-semibold mb-4">Visualización del Grafo</h2>
-              <div className="h-[600px] w-full border rounded-lg ml-[20%]">
+              <div className="h-[600px] w-full border rounded-lg">
                 <GraphLayout
                   nodes={convertModelNodesToReagraph(data.nodes)}
                   edges={data.edges}
                   onNodeClick={handleNodeClick}
                   onEdgeClick={handleEdgeClick}
-                  labelType="all"
+                  labelType="nodes"
+                  // className="h-full w-full"
+                  // cameraMode='rotate'
+                  // draggable={true}
+                  
                 />
               </div>
             </div>
