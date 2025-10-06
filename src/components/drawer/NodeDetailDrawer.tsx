@@ -163,30 +163,56 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
                   </AccordionSummary>
                   <AccordionDetails>
                     <Stack spacing={1}>
-                      {Object.entries(node.data).map(([key, value]) => (
-                        <Paper
-                          key={key}
-                          variant="outlined"
-                          sx={{ p: 1.5, backgroundColor: '#fafafa' }}
-                        >
-                          <Typography
-                            variant="subtitle2"
-                            sx={{ fontWeight: 600, color: categoryColor, mb: 0.5 }}
+                      {Object.entries(node.data).map(([key, value]) => {
+                        const isDoi = key.toLowerCase() === 'doi';
+                        const doiUrl = isDoi && typeof value === 'string' ? `https://doi.org/${value}` : null;
+
+                        return (
+                          <Paper
+                            key={key}
+                            variant="outlined"
+                            sx={{ p: 1.5, backgroundColor: '#fafafa' }}
                           >
-                            {key}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              wordBreak: 'break-word',
-                              fontFamily: typeof value === 'string' && value.length > 50 ? 'monospace' : 'inherit',
-                              fontSize: typeof value === 'string' && value.length > 50 ? '0.75rem' : 'inherit',
-                            }}
-                          >
-                            {typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value)}
-                          </Typography>
-                        </Paper>
-                      ))}
+                            <Typography
+                              variant="subtitle2"
+                              sx={{ fontWeight: 600, color: categoryColor, mb: 0.5 }}
+                            >
+                              {key}
+                            </Typography>
+                            {isDoi && doiUrl ? (
+                              <Typography
+                                component="a"
+                                href={doiUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                variant="body2"
+                                sx={{
+                                  wordBreak: 'break-word',
+                                  color: '#2563eb',
+                                  textDecoration: 'underline',
+                                  cursor: 'pointer',
+                                  '&:hover': {
+                                    color: '#1d4ed8',
+                                  },
+                                }}
+                              >
+                                {doiUrl}
+                              </Typography>
+                            ) : (
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  wordBreak: 'break-word',
+                                  fontFamily: typeof value === 'string' && value.length > 50 ? 'monospace' : 'inherit',
+                                  fontSize: typeof value === 'string' && value.length > 50 ? '0.75rem' : 'inherit',
+                                }}
+                              >
+                                {typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value)}
+                              </Typography>
+                            )}
+                          </Paper>
+                        );
+                      })}
                     </Stack>
                   </AccordionDetails>
                 </Accordion>
