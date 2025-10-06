@@ -8,6 +8,7 @@ import GraphSidebar from '@/components/layout/GraphSidebar';
 import NodeDetailDrawer from '@/components/drawer/NodeDetailDrawer';
 import EdgeDetailDrawer from '@/components/drawer/EdgeDetailDrawer';
 import { GraphLayout, convertModelNodesToReagraph } from '@/components';
+import { AIAssistantDrawer, AIFloatingButton } from '@/components/ai';
 
 export default function GraphPage() {
   const { data, loading, error, hasActiveFilters, selectedCategories } = useGraphWithFilters();
@@ -15,6 +16,7 @@ export default function GraphPage() {
   const [selectedEdge, setSelectedEdge] = useState<any>(null);
   const [nodeDrawerOpen, setNodeDrawerOpen] = useState(false);
   const [edgeDrawerOpen, setEdgeDrawerOpen] = useState(false);
+  const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
 
   const handleNodeClick = useCallback((node: any) => {
     console.log('Nodo clickeado:', node);
@@ -71,6 +73,23 @@ export default function GraphPage() {
   const handleCompareNodes = useCallback((sourceNode: any, targetNode: any) => {
     console.log('Comparando nodos:', sourceNode, targetNode);
     alert(`Comparando:\n${extractDisplayName(sourceNode.label)}\nvs\n${extractDisplayName(targetNode.label)}`);
+  }, []);
+
+  const handleOpenAIAssistant = useCallback(() => {
+    // Cerrar otros drawers cuando se abre el AI Assistant
+    if (nodeDrawerOpen) {
+      setNodeDrawerOpen(false);
+      setSelectedNode(null);
+    }
+    if (edgeDrawerOpen) {
+      setEdgeDrawerOpen(false);
+      setSelectedEdge(null);
+    }
+    setAiDrawerOpen(true);
+  }, [nodeDrawerOpen, edgeDrawerOpen]);
+
+  const handleCloseAIDrawer = useCallback(() => {
+    setAiDrawerOpen(false);
   }, []);
 
   // Solo mostrar loading completo en la carga inicial
@@ -159,6 +178,17 @@ export default function GraphPage() {
           nodes={data?.nodes || null}
           onCompare={handleCompareNodes}
         />
+      )}
+
+      {/* AI Assistant Drawer */}
+      <AIAssistantDrawer
+        isOpen={aiDrawerOpen}
+        onClose={handleCloseAIDrawer}
+      />
+
+      {/* AI Floating Button */}
+      {!aiDrawerOpen && (
+        <AIFloatingButton onClick={handleOpenAIAssistant} />
       )}
     </div>
   );
