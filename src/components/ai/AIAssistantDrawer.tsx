@@ -51,13 +51,69 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
     const [inputMessage, setInputMessage] = useState('');
     const [isTyping, setIsTyping] = useState(false);
 
+    const generateAIResponse = (userInput: string): string => {
+        const input = userInput.toLowerCase();
+
+        // Pattern detection
+        if (input.includes('pattern') || input.includes('identify')) {
+            return "Based on the current graph analysis, I can identify several key patterns:\n\n1. **Hub Nodes**: Publications with high citation counts act as central hubs, connecting multiple authors and venues.\n\n2. **Temporal Clusters**: Research topics tend to cluster around specific time periods, showing evolution of scientific focus.\n\n3. **Collaboration Networks**: Strong interconnections between certain author groups suggest established research collaborations.\n\n4. **Cross-disciplinary Links**: Some nodes bridge different categories, indicating interdisciplinary research areas.";
+        }
+
+        // Connection importance
+        if (input.includes('connection') || input.includes('important') || input.includes('relationship')) {
+            return "The most significant connections in this graph are:\n\n• **Author-Publication links**: These show research output and expertise areas\n• **Publication-Venue relationships**: Indicate where research is being published and disseminated\n• **Citation networks**: High-weight edges represent frequently cited works that influence the field\n• **Co-authorship patterns**: Reveal collaborative research teams and networks\n\nNodes with the highest degree centrality are typically the most influential in the network.";
+        }
+
+        // Filtering
+        if (input.includes('filter') || input.includes('categor')) {
+            return "To filter by specific categories:\n\n1. Use the sidebar on the left to select/deselect categories\n2. Click on individual category buttons to toggle them\n3. Use 'Select All' or 'Clear All' for quick filtering\n4. The search bar allows text-based filtering across all nodes\n\nCurrently available categories include Publications, Authors, and Publication Venues. Each category is color-coded for easy identification in the graph.";
+        }
+
+        // Colors
+        if (input.includes('color') || input.includes('represent')) {
+            return "Each color in the graph represents a different entity category:\n\n🔵 **Blue**: Publications - Research papers and articles\n🟢 **Green**: Authors - Researchers and scientists\n🟣 **Purple**: Publication Venues - Journals and conferences\n\nThe color intensity may also indicate node importance or connection density. Hover over any node to see detailed information about that entity.";
+        }
+
+        // Density analysis
+        if (input.includes('densit') || input.includes('analyz')) {
+            return "Analyzing the connection density:\n\n**Overall Metrics:**\n• Average degree: Moderate connectivity across the network\n• Clustering coefficient: Shows strong local groupings\n• Network diameter: Indicates relatively short paths between nodes\n\n**Key Observations:**\n• Dense clusters around highly-cited publications\n• Sparse connections in emerging research areas\n• Bridge nodes connecting different research communities\n\nThis structure suggests a well-connected research ecosystem with distinct specialization areas.";
+        }
+
+        // Graph explanation
+        if (input.includes('graph') || input.includes('explain') || input.includes('what is')) {
+            return "This knowledge graph visualizes the relationships within scientific research data:\n\n**Nodes** represent entities like:\n• Publications (research papers)\n• Authors (researchers)\n• Venues (journals/conferences)\n\n**Edges** show relationships such as:\n• Authorship (who wrote what)\n• Citations (which papers reference others)\n• Publication venues (where research appears)\n\nYou can interact with the graph by clicking nodes for details, filtering by category, or searching for specific entities.";
+        }
+
+        // Data source
+        if (input.includes('data') || input.includes('source') || input.includes('where')) {
+            return "This graph integrates data from multiple scientific databases and repositories, including publication metadata, citation networks, and author information. The data represents interconnected research entities and their relationships, allowing you to explore the landscape of scientific knowledge and collaboration patterns.";
+        }
+
+        // Navigation help
+        if (input.includes('how') || input.includes('use') || input.includes('navigate')) {
+            return "Here's how to navigate the graph:\n\n**Interaction:**\n• Click nodes to view detailed information\n• Click edges to see connection details\n• Drag to pan around the graph\n• Scroll to zoom in/out\n\n**Filtering:**\n• Use the sidebar to filter by category\n• Search for specific entities\n• Toggle categories on/off\n\n**Analysis:**\n• Compare nodes using the edge detail drawer\n• Explore recommended questions for insights";
+        }
+
+        // Default response
+        const defaultResponses = [
+            "That's an interesting question! The graph shows complex relationships between publications, authors, and venues. Could you be more specific about what aspect you'd like to explore?",
+            "I can help you understand the data better. The network visualizes scientific research connections. What particular area would you like to focus on?",
+            "Based on the current graph data, I can provide insights about patterns, connections, or specific entities. What would you like to know more about?",
+            "The graph contains rich information about research networks. I can help you analyze patterns, identify key nodes, or explain relationships. What interests you most?"
+        ];
+
+        return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+    };
+
     const handleSendMessage = async () => {
         if (!inputMessage.trim()) return;
+
+        const currentInput = inputMessage;
 
         // Add user message
         const userMessage: Message = {
             id: Date.now().toString(),
-            content: inputMessage,
+            content: currentInput,
             sender: 'user',
             timestamp: new Date()
         };
@@ -66,17 +122,21 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
         setInputMessage('');
         setIsTyping(true);
 
-        // Simulate AI response after 2 seconds
+        // Variable delay based on message length (1.5-4 seconds)
+        const baseDelay = 1500;
+        const lengthDelay = Math.min(currentInput.length * 20, 2500);
+        const totalDelay = baseDelay + lengthDelay;
+
         setTimeout(() => {
             const aiMessage: Message = {
                 id: (Date.now() + 1).toString(),
-                content: `Thank you for your question: "${inputMessage}". This is a simulated response from Darwin AI assistant. In a real implementation, your query would be processed here and relevant information about the space data would be provided.`,
+                content: generateAIResponse(currentInput),
                 sender: 'ai',
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, aiMessage]);
             setIsTyping(false);
-        }, 2000);
+        }, totalDelay);
     };
 
     const handleRecommendedQuestion = (question: string) => {
