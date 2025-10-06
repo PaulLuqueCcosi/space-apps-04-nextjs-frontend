@@ -18,18 +18,18 @@ export interface GraphFiltersRequest {
 
 // ------------ Response types del API --------
 export interface GraphNodeResponse {
-  id: string;
+  id: number;
   label: string;
   category: Categories;
   data: Record<string, any>;
-  type: string;
-  related: boolean
+  type?: string;
+  related?: boolean
 }
 
 export interface GraphEdgeResponse {
-  id: string;
-  source: string;
-  target: string;
+  id: number;
+  source: number;
+  target: number;
   label: string;
 }
 

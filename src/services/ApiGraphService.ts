@@ -12,6 +12,7 @@ export class ApiGraphService extends BaseGraphService {
   }
 
   async queryGraph(filters: GraphFilters): Promise<GraphData> {
+    console.log("servicio")
     try {
       const queryParams = GraphAdapter.filtersToQueryParams(filters);
       const url = `${this.baseUrl}/graph/query?${queryParams.toString()}`;
@@ -27,7 +28,9 @@ export class ApiGraphService extends BaseGraphService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
+      console.log("API response 1")
       const apiResponse: GraphDataResponse = await response.json();
+      console.log(apiResponse)
       return GraphAdapter.apiResponseToFrontendData(apiResponse);
 
     } catch (error) {

@@ -43,11 +43,21 @@ export class GraphAdapter {
     return categories.map(cat => cat.toString());
   }
 
-  // Por ahora es una conversión directa, pero mantiene la abstracción para futuros cambios
+  // Convierte la respuesta del API al formato del frontend
   static apiResponseToFrontendData(response: GraphDataResponse): GraphData {
     return {
-      nodes: response.nodes,
-      edges: response.edges,
+      nodes: response.nodes.map(node => ({
+        id: node.id.toString(),
+        label: node.label,
+        category: node.category,
+        data: node.data
+      })),
+      edges: response.edges.map(edge => ({
+        id: edge.id.toString(),
+        source: edge.source.toString(),
+        target: edge.target.toString(),
+        label: edge.label
+      })),
       metadata: response.metadata
     };
   }

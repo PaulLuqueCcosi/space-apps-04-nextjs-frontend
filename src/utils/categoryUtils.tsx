@@ -36,7 +36,7 @@ export const CATEGORY_DISPLAY_NAMES = {
 
 // Función para obtener el color de una categoría
 export const getCategoryColor = (category: Categories): string => {
-  console.log("Ingresa para pedir color", category)
+  // console.log("Ingresa para pedir color", category)
   return CATEGORY_COLORS[category] || CATEGORY_COLORS.default;
 
 };
@@ -79,7 +79,6 @@ export interface CategoryConfig {
 }
 
 export const getCategoryConfig = (category: Categories): CategoryConfig => {
-  console.log("ingresa para obtner config",category)
   return {
     key: category,
     label: category,
