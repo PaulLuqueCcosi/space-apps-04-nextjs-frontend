@@ -1,6 +1,6 @@
 import { BaseGraphService } from './abstractions/IGraphService';
 import { GraphData, GraphFilters } from '@/models/GraphModels';
-import { GraphQueryResponse } from '@/services/types/graph';
+import { GraphDataResponse } from '@/services/types/graph';
 import { GraphAdapter } from './adapters/GraphAdapter';
 
 export class ApiGraphService extends BaseGraphService {
@@ -27,7 +27,7 @@ export class ApiGraphService extends BaseGraphService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const apiResponse: GraphQueryResponse = await response.json();
+      const apiResponse: GraphDataResponse = await response.json();
       return GraphAdapter.apiResponseToFrontendData(apiResponse);
 
     } catch (error) {

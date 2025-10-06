@@ -1,12 +1,13 @@
 // Enums y tipos base del API
 export enum Categories {
-  Publications = "publications",
-  Missions = "missions", 
-  Experiments = "experiments",
-  Authors = "authors",
-  Topic = "topic",
-  Dataset = "dataset",
-  PublicationVenue = "publicationvenue"
+  Publications = "Article",
+  Authors = "Author",
+  PublicationVenue = "Journal",
+  // no se tiene
+  // Missions = "missions", 
+  // Experiments = "experiments",
+  // Topic = "topic",
+  // Dataset = "dataset"
 }
 
 // ---------------Request types------------
@@ -21,6 +22,8 @@ export interface GraphNodeResponse {
   label: string;
   category: Categories;
   data: Record<string, any>;
+  type: string;
+  related: boolean
 }
 
 export interface GraphEdgeResponse {
@@ -38,4 +41,5 @@ export interface GraphDataResponse {
     totalEdges: number;
     categoriesQueried: Categories[];
   };
+  ai_response: string;
 }

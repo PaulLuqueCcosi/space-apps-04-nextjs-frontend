@@ -14,29 +14,31 @@ import {
 // Configuración centralizada de colores por categoría
 export const CATEGORY_COLORS = {
   [Categories.Publications]: '#48bb78',
-  [Categories.Experiments]: '#3182ce',
-  [Categories.Missions]: '#805ad5',
+  // [Categories.Experiments]: '#3182ce',
+  // [Categories.Missions]: '#805ad5',
   [Categories.Authors]: '#ed8936',
   [Categories.PublicationVenue]: '#d69e2e',
-  [Categories.Topic]: '#e53e3e',
-  [Categories.Dataset]: '#38b2ac',
+  // [Categories.Topic]: '#e53e3e',
+  // [Categories.Dataset]: '#38b2ac',
   default: '#718096'
 } as const;
 
 // Configuración centralizada de nombres de display
 export const CATEGORY_DISPLAY_NAMES = {
   [Categories.Publications]: 'Publicaciones',
-  [Categories.Experiments]: 'Experimentos',
-  [Categories.Missions]: 'Misiones',
+  // [Categories.Experiments]: 'Experimentos',
+  // [Categories.Missions]: 'Misiones',
   [Categories.Authors]: 'Autores',
   [Categories.PublicationVenue]: 'Venues de Publicación',
-  [Categories.Topic]: 'Temas',
-  [Categories.Dataset]: 'Datasets'
+  // [Categories.Topic]: 'Temas',
+  // [Categories.Dataset]: 'Datasets'
 } as const;
 
 // Función para obtener el color de una categoría
 export const getCategoryColor = (category: Categories): string => {
+  console.log("Ingresa para pedir color", category)
   return CATEGORY_COLORS[category] || CATEGORY_COLORS.default;
+
 };
 
 // Función para obtener el nombre de display de una categoría
@@ -49,18 +51,18 @@ export const getCategoryHeroIcon = (category: Categories, className: string = "w
   switch (category) {
     case Categories.Publications:
       return <DocumentTextIcon className={className} />;
-    case Categories.Experiments:
-      return <BeakerIcon className={className} />;
-    case Categories.Missions:
-      return <RocketLaunchIcon className={className} />;
+    // case Categories.Experiments:
+      // return <BeakerIcon className={className} />;
+    // case Categories.Missions:
+      // return <RocketLaunchIcon className={className} />;
     case Categories.Authors:
       return <UserIcon className={className} />;
     case Categories.PublicationVenue:
       return <BuildingLibraryIcon className={className} />;
-    case Categories.Topic:
-      return <ChatBubbleBottomCenterTextIcon className={className} />;
-    case Categories.Dataset:
-      return <CircleStackIcon className={className} />;
+    // case Categories.Topic:
+      // return <ChatBubbleBottomCenterTextIcon className={className} />;
+    // case Categories.Dataset:
+      // return <CircleStackIcon className={className} />;
     default:
       return <InformationCircleIcon className={className} />;
   }
@@ -77,6 +79,7 @@ export interface CategoryConfig {
 }
 
 export const getCategoryConfig = (category: Categories): CategoryConfig => {
+  console.log("ingresa para obtner config",category)
   return {
     key: category,
     label: category,

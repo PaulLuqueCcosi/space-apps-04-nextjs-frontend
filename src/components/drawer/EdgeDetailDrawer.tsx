@@ -49,18 +49,18 @@ const getCategoryIcon = (category: Categories) => {
     switch (category) {
         case Categories.Publications:
             return <PaperIcon sx={{ fontSize: '1rem' }} />;
-        case Categories.Experiments:
-            return <ExperimentsIcon sx={{ fontSize: '1rem' }} />;
-        case Categories.Missions:
-            return <MissionsIcon sx={{ fontSize: '1rem' }} />;
+        // case Categories.Experiments:
+            // return <ExperimentsIcon sx={{ fontSize: '1rem' }} />;
+        // case Categories.Missions:
+            // return <MissionsIcon sx={{ fontSize: '1rem' }} />;
         case Categories.Authors:
             return <AuthorIcon sx={{ fontSize: '1rem' }} />;
         case Categories.PublicationVenue:
             return <JournalIcon sx={{ fontSize: '1rem' }} />;
-        case Categories.Topic:
-            return <TopicIcon sx={{ fontSize: '1rem' }} />;
-        case Categories.Dataset:
-            return <DatasetIcon sx={{ fontSize: '1rem' }} />;
+        // case Categories.Topic:
+            // return <TopicIcon sx={{ fontSize: '1rem' }} />;
+        // case Categories.Dataset:
+            // return <DatasetIcon sx={{ fontSize: '1rem' }} />;
         default:
             return <InfoIcon sx={{ fontSize: '1rem' }} />;
     }

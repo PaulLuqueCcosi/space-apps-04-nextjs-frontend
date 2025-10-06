@@ -18,7 +18,8 @@ export const graphService = {
                         totalNodes: 0,
                         totalEdges: 0,
                         categoriesQueried: []
-                    }
+                    },
+                    ai_response: ""
                 };
             }
 

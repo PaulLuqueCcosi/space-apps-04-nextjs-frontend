@@ -7,26 +7,26 @@ import { Categories } from '@/models/GraphModels';
 export const GraphExample = () => {
     // Datos de ejemplo usando las categorías reales
     const nodesData: NodeData[] = [
-        {
-            id: 'mars-mission-2024',
-            label: 'Mars Mission 2024',
-            category: Categories.Missions,
-            data: {
-                status: 'active',
-                launchDate: '2024-03-15',
-                agency: 'NASA'
-            }
-        },
-        {
-            id: 'soil-analysis-exp',
-            label: 'Soil Analysis Experiment',
-            category: Categories.Experiments,
-            data: {
-                type: 'geological',
-                duration: '6 months',
-                samples: 150
-            }
-        },
+        // {
+        //     id: 'mars-mission-2024',
+        //     label: 'Mars Mission 2024',
+        //     category: Categories.Missions,
+        //     data: {
+        //         status: 'active',
+        //         launchDate: '2024-03-15',
+        //         agency: 'NASA'
+        //     }
+        // },
+        // {
+        //     id: 'soil-analysis-exp',
+        //     label: 'Soil Analysis Experiment',
+        //     category: Categories.Experiments,
+        //     data: {
+        //         type: 'geological',
+        //         duration: '6 months',
+        //         samples: 150
+        //     }
+        // },
         {
             id: 'dr-jane-smith',
             label: 'Dr. Jane Smith',
@@ -47,15 +47,15 @@ export const GraphExample = () => {
                 year: 2024
             }
         },
-        {
-            id: 'astrobiology-topic',
-            label: 'Astrobiology',
-            category: Categories.Topic,
-            data: {
-                relatedPapers: 156,
-                trending: true
-            }
-        }
+        // {
+        //     id: 'astrobiology-topic',
+        //     label: 'Astrobiology',
+        //     category: Categories.Topic,
+        //     data: {
+        //         relatedPapers: 156,
+        //         trending: true
+        //     }
+        // }
     ];
 
     // Crear nodos con estilos

@@ -8,7 +8,7 @@ import type {
   InternalGraphNode,
   InternalGraphEdge,
   CollapseProps,
-  ThreeEvent
+  // ThreeEvent
 } from 'reagraph';
 
 // Importación dinámica para evitar problemas de SSR
@@ -31,7 +31,7 @@ interface GraphLayoutProps {
   children?: ReactNode;
   selectedNodeId?: string | null;
   selectedEdgeId?: string | null;
-  cameraMode?: string
+  cameraMode?: 'pan' | 'rotate'
   draggable?: boolean
 }
 
@@ -92,7 +92,8 @@ export const GraphLayout = ({
 
   // Handlers que convierten los tipos internos de reagraph a los tipos públicos
   const handleNodeClick = onNodeClick
-    ? (node: InternalGraphNode, props?: CollapseProps, event?: ThreeEvent<MouseEvent>) => {
+    // ? (node: InternalGraphNode, props?: CollapseProps, event?: ThreeEvent<MouseEvent>) => {
+    ? (node: InternalGraphNode, props?: CollapseProps, event?: any) => {
       // Convertimos el nodo interno al formato público
       const publicNode: ReagraphNode = {
         id: node.id,
@@ -108,7 +109,8 @@ export const GraphLayout = ({
     : undefined;
 
   const handleEdgeClick = onEdgeClick
-    ? (edge: InternalGraphEdge, props?: CollapseProps, event?: ThreeEvent<MouseEvent>) => {
+    // ? (edge: InternalGraphEdge, event?: ThreeEvent<MouseEvent>) => {
+    ? (edge: InternalGraphEdge, event?: any) => {
       // Convertimos el edge interno al formato público
       const publicEdge: ReagraphEdge = {
         id: edge.id,

@@ -19,7 +19,7 @@ export function useGraphWithFilters() {
         ...data,
         edges: data.edges.map(edge => ({
           ...edge,
-          size: edge.size || 2
+          size: 2
         }))
       };
     }

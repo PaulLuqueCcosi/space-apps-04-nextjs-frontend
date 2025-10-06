@@ -31,7 +31,7 @@ export default function FilterSummary({
             {selectedCategories.length > 0 && (
               <div className="text-sm text-blue-700">
                 <span className="font-medium">Tipos de nodos:</span>{' '}
-                {selectedCategories.map(cat => getCategoryDisplayName(cat)).join(', ')}
+                {/* {selectedCategories.map(cat => getCategoryDisplayName(cat)).join(', ')} */}
               </div>
             )}
             
