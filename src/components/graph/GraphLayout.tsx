@@ -2,8 +2,8 @@
 
 import dynamic from 'next/dynamic';
 import { ReactNode, useMemo } from 'react';
-import type { 
-  GraphNode as ReagraphNode, 
+import type {
+  GraphNode as ReagraphNode,
   GraphEdge as ReagraphEdge,
   InternalGraphNode,
   InternalGraphEdge,
@@ -31,6 +31,8 @@ interface GraphLayoutProps {
   children?: ReactNode;
   selectedNodeId?: string | null;
   selectedEdgeId?: string | null;
+  cameraMode?: string
+  draggable?: boolean
 }
 
 export const GraphLayout = ({
@@ -41,22 +43,38 @@ export const GraphLayout = ({
   className = 'h-full w-full',
   labelType = 'all',
   children,
+  cameraMode = "pan",
   selectedNodeId,
-  selectedEdgeId
+  selectedEdgeId,
+  draggable = true
 }: GraphLayoutProps) => {
   // Modificamos los nodos para resaltar el seleccionado con un borde brillante
   const processedNodes = useMemo(() => {
+    // Encontrar el edge seleccionado para resaltar sus nodos conectados
+    const selectedEdge = selectedEdgeId ? edges.find(edge => edge.id === selectedEdgeId) : null;
+
     return nodes.map(node => {
+      // Resaltar nodo seleccionado directamente
       if (selectedNodeId && node.id === selectedNodeId) {
         return {
           ...node,
-          fill: '#1eedaf', // Color azul para nodo seleccionado
-          size: node.size!! * 1.2, // Aumentar tamaño 50%
+          fill: '#1eedaf', // Color verde para nodo seleccionado
+          // size: (node.size || 10) * 1.5, // Aumentar tamaño 50%
         };
       }
+
+      // Resaltar nodos conectados al edge seleccionado
+      if (selectedEdge && (node.id === selectedEdge.source || node.id === selectedEdge.target)) {
+        return {
+          ...node,
+          fill: '#1eedaf', // Color rojo para nodos conectados al edge seleccionado
+          // size: (node.size || 10) * 1.3, // Aumentar tamaño 30%
+        };
+      }
+
       return node;
     });
-  }, [nodes, selectedNodeId]);
+  }, [nodes, selectedNodeId, selectedEdgeId, edges]);
 
   // Modificamos los edges para resaltar el seleccionado
   const processedEdges = useMemo(() => {
@@ -64,7 +82,8 @@ export const GraphLayout = ({
       if (selectedEdgeId && edge.id === selectedEdgeId) {
         return {
           ...edge,
-          // size: (edge.size || 1) * 2, // Aumentar grosor
+          fill: '#1eedaf', // Color rojo para nodos conectados al edge seleccionado
+          size: (edge.size || 1) * 2, // Aumentar grosor del edge seleccionado
         };
       }
       return edge;
@@ -72,36 +91,36 @@ export const GraphLayout = ({
   }, [edges, selectedEdgeId]);
 
   // Handlers que convierten los tipos internos de reagraph a los tipos públicos
-  const handleNodeClick = onNodeClick 
+  const handleNodeClick = onNodeClick
     ? (node: InternalGraphNode, props?: CollapseProps, event?: ThreeEvent<MouseEvent>) => {
-        // Convertimos el nodo interno al formato público
-        const publicNode: ReagraphNode = {
-          id: node.id,
-          label: node.label,
-          fill: node.fill,
-          size: node.size,
-          icon: node.icon,
-          data: node.data,
-          labelVisible: node.labelVisible
-        };
-        onNodeClick(publicNode);
-      }
+      // Convertimos el nodo interno al formato público
+      const publicNode: ReagraphNode = {
+        id: node.id,
+        label: node.label,
+        fill: node.fill,
+        size: node.size,
+        icon: node.icon,
+        data: node.data,
+        labelVisible: node.labelVisible
+      };
+      onNodeClick(publicNode);
+    }
     : undefined;
 
   const handleEdgeClick = onEdgeClick
     ? (edge: InternalGraphEdge, props?: CollapseProps, event?: ThreeEvent<MouseEvent>) => {
-        // Convertimos el edge interno al formato público
-        const publicEdge: ReagraphEdge = {
-          id: edge.id,
-          source: edge.source,
-          target: edge.target,
-          label: edge.label,
-          size: edge.size,
-          data: edge.data,
-          labelVisible: edge.labelVisible
-        };
-        onEdgeClick(publicEdge);
-      }
+      // Convertimos el edge interno al formato público
+      const publicEdge: ReagraphEdge = {
+        id: edge.id,
+        source: edge.source,
+        target: edge.target,
+        label: edge.label,
+        size: edge.size,
+        data: edge.data,
+        labelVisible: edge.labelVisible
+      };
+      onEdgeClick(publicEdge);
+    }
     : undefined;
 
   return (
@@ -112,6 +131,8 @@ export const GraphLayout = ({
         edges={processedEdges}
         onNodeClick={handleNodeClick}
         onEdgeClick={handleEdgeClick}
+        cameraMode={cameraMode}
+        draggable={draggable}
       />
       {children}
     </div>

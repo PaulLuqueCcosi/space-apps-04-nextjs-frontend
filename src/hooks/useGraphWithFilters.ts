@@ -13,10 +13,19 @@ export function useGraphWithFilters() {
   const getFilteredData = useCallback(() => {
     if (!data) return null;
 
-    if (!searchQuery.trim()) return data;
+    if (!searchQuery.trim()) {
+      // Agregar size por defecto a todos los edges cuando no hay filtros
+      return {
+        ...data,
+        edges: data.edges.map(edge => ({
+          ...edge,
+          size: edge.size || 2
+        }))
+      };
+    }
 
     const query = searchQuery.toLowerCase().trim();
-    
+
     // Filtrar nodos que coincidan con la búsqueda
     const filteredNodes = data.nodes.filter(node => {
       const label = node.label?.toLowerCase() || '';
@@ -27,10 +36,15 @@ export function useGraphWithFilters() {
     // Obtener IDs de nodos filtrados
     const filteredNodeIds = new Set(filteredNodes.map(node => node.id));
 
-    // Filtrar edges que conecten nodos filtrados
-    const filteredEdges = data.edges.filter(edge => 
-      filteredNodeIds.has(edge.source) && filteredNodeIds.has(edge.target)
-    );
+    // Filtrar edges que conecten nodos filtrados y agregar size por defecto
+    const filteredEdges = data.edges
+      .filter(edge =>
+        filteredNodeIds.has(edge.source) && filteredNodeIds.has(edge.target)
+      )
+      .map(edge => ({
+        ...edge,
+        size: 2 // Agregar grosor por defecto de 2
+      }));
 
     return {
       nodes: filteredNodes,
