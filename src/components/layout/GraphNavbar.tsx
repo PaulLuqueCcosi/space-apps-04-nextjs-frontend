@@ -20,8 +20,8 @@ const pages = [
 ];
 
 const actionButtons = [
-  { name: 'Grafs', href: '/graph', variant: 'contained' as const },
-  { name: 'Dashboard', href: '/', variant: 'outlined' as const },
+  { name: 'Graph', href: '/graph', variant: 'contained' as const },
+  // { name: 'Dashboard', href: '/', variant: 'outlined' as const },
 ];
 
 export default function EducationNavbar() {
@@ -39,7 +39,7 @@ export default function EducationNavbar() {
     <AppBar
       position="fixed"
       sx={{
-        background: '#C3E956',
+        background: 'linear-gradient(to bottom right, #d9f99d, #bbf7d0, #99f6e4)',
         boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
       }}
     >

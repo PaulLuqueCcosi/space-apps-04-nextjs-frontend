@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 // Datos estáticos de ejemplo
 
@@ -22,12 +23,17 @@ export default function HomePage() {
             <div className="relative z-10 flex flex-col justify-center items-start min-h-screen px-8 md:px-16 lg:px-24">
                 {/* Logo */}
                 <div className="mb-8">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-4">
                         <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-black tracking-tight">
                             DARWIN
                         </h1>
-                        <div className="w-12 h-12 md:w-16 md:h-16 bg-black rounded-full relative">
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-lime-200 rounded-full"></div>
+                        <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24">
+                            <Image
+                                src="/Darwin.svg"
+                                alt="Darwin Logo"
+                                fill
+                                style={{ objectFit: 'contain' }}
+                            />
                         </div>
                     </div>
                 </div>
@@ -38,7 +44,7 @@ export default function HomePage() {
                 </p> */}
 
                 {/* CTA Button */}
-                <button 
+                <button
                     onClick={handleStartJourney}
                     className="group relative bg-black text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-900 transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl hover:scale-105"
                 >
