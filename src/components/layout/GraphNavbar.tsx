@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,8 +15,8 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 
 const pages = [
-  { name: 'Dashboard', href: '/' },
-  { name: 'Grafs', href: '/graph' },
+  // { name: 'Dashboard', href: '/' },
+  // { name: 'Grafs', href: '/graph' },
 ];
 
 const actionButtons = [
@@ -38,30 +39,31 @@ export default function EducationNavbar() {
     <AppBar
       position="fixed"
       sx={{
-        background: 'linear-gradient(to right, #68d391, #48bb78)',
+        background: '#C3E956',
         boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
       }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ minHeight: '64px' }}>
           {/* Logo - Desktop */}
-          <Typography
-            variant="h6"
-            noWrap
+          <Box
             component={Link}
             href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontWeight: 700,
-              color: 'black',
-              textDecoration: 'none',
               alignItems: 'center',
-              gap: 1,
+              textDecoration: 'none',
             }}
           >
-            🧬 DARWIN
-          </Typography>
+            <Image
+              src="/Darwin.svg"
+              alt="Darwin Logo"
+              width={40}
+              height={40}
+              style={{ objectFit: 'contain' }}
+            />
+          </Box>
 
           {/* Mobile Menu Button */}
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -92,7 +94,7 @@ export default function EducationNavbar() {
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
-              {pages.map((page) => (
+              {/* {pages.map((page) => (
                 <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                   <Typography
                     component={Link}
@@ -107,7 +109,7 @@ export default function EducationNavbar() {
                     {page.name}
                   </Typography>
                 </MenuItem>
-              ))}
+              ))} */}
               {/* Mobile Action Buttons */}
               {actionButtons.map((button) => (
                 <MenuItem key={`mobile-${button.name}`} onClick={handleCloseNavMenu}>
@@ -133,28 +135,29 @@ export default function EducationNavbar() {
           </Box>
 
           {/* Logo - Mobile */}
-          <Typography
-            variant="h5"
-            noWrap
+          <Box
             component={Link}
             href="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
-              fontWeight: 700,
-              color: 'black',
-              textDecoration: 'none',
               alignItems: 'center',
-              gap: 1,
+              textDecoration: 'none',
             }}
           >
-            🧬 DARWIN
-          </Typography>
+            <Image
+              src="/Darwin.svg"
+              alt="Darwin Logo"
+              width={32}
+              height={32}
+              style={{ objectFit: 'contain' }}
+            />
+          </Box>
 
           {/* Desktop Navigation Links */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, ml: 4 }}>
-            {pages.map((page) => (
+            {/* {pages.map((page) => (
               <Button
                 key={page.name}
                 component={Link}
@@ -172,7 +175,7 @@ export default function EducationNavbar() {
               >
                 {page.name}
               </Button>
-            ))}
+            ))} */}
           </Box>
 
           {/* Desktop Action Buttons */}

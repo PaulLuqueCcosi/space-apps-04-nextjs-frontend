@@ -33,9 +33,9 @@ export default function HomePage() {
                 </div>
 
                 {/* Subtitle */}
-                <p className="text-xl md:text-2xl text-gray-800 mb-12 max-w-md font-light">
+                {/* <p className="text-xl md:text-2xl text-gray-800 mb-12 max-w-md font-light">
                     Our motto or the purpose of the web
-                </p>
+                </p> */}
 
                 {/* CTA Button */}
                 <button 

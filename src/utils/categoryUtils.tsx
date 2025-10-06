@@ -25,11 +25,11 @@ export const CATEGORY_COLORS = {
 
 // Configuración centralizada de nombres de display
 export const CATEGORY_DISPLAY_NAMES = {
-  [Categories.Publications]: 'Publicaciones',
+  [Categories.Publications]: 'Publications',
   // [Categories.Experiments]: 'Experimentos',
   // [Categories.Missions]: 'Misiones',
-  [Categories.Authors]: 'Autores',
-  [Categories.PublicationVenue]: 'Venues de Publicación',
+  [Categories.Authors]: 'Authors',
+  [Categories.PublicationVenue]: 'Publication Venues',
   // [Categories.Topic]: 'Temas',
   // [Categories.Dataset]: 'Datasets'
 } as const;
@@ -52,17 +52,17 @@ export const getCategoryHeroIcon = (category: Categories, className: string = "w
     case Categories.Publications:
       return <DocumentTextIcon className={className} />;
     // case Categories.Experiments:
-      // return <BeakerIcon className={className} />;
+    // return <BeakerIcon className={className} />;
     // case Categories.Missions:
-      // return <RocketLaunchIcon className={className} />;
+    // return <RocketLaunchIcon className={className} />;
     case Categories.Authors:
       return <UserIcon className={className} />;
     case Categories.PublicationVenue:
       return <BuildingLibraryIcon className={className} />;
     // case Categories.Topic:
-      // return <ChatBubbleBottomCenterTextIcon className={className} />;
+    // return <ChatBubbleBottomCenterTextIcon className={className} />;
     // case Categories.Dataset:
-      // return <CircleStackIcon className={className} />;
+    // return <CircleStackIcon className={className} />;
     default:
       return <InformationCircleIcon className={className} />;
   }
@@ -96,7 +96,7 @@ export const getAllCategoryConfigs = (): CategoryConfig[] => {
 // Función para obtener estilos CSS consistentes
 export const getCategoryStyles = (category: Categories, isSelected: boolean = false) => {
   const color = getCategoryColor(category);
-  
+
   return {
     backgroundColor: isSelected ? color : 'transparent',
     borderColor: isSelected ? color : '#d1d5db',
