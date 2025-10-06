@@ -119,11 +119,10 @@ export default function EducationNavbar() {
                     variant={button.variant}
                     fullWidth
                     sx={{
-                      backgroundColor: button.variant === 'contained' ? 'black' : 'transparent',
-                      color: button.variant === 'contained' ? 'white' : 'black',
-                      border: button.variant === 'outlined' ? '1px solid #d1d5db' : 'none',
+                      backgroundColor: 'black',
+                      color: 'white',
                       '&:hover': {
-                        backgroundColor: button.variant === 'contained' ? '#374151' : '#f9fafb',
+                        backgroundColor: '#374151',
                       },
                     }}
                   >
@@ -188,12 +187,11 @@ export default function EducationNavbar() {
                 variant={button.variant}
                 size="small"
                 sx={{
-                  backgroundColor: button.variant === 'contained' ? 'black' : 'transparent',
-                  color: button.variant === 'contained' ? 'white' : 'black',
-                  border: button.variant === 'outlined' ? '1px solid #d1d5db' : 'none',
+                  backgroundColor: 'black',
+                  color: 'white',
                   fontWeight: 500,
                   '&:hover': {
-                    backgroundColor: button.variant === 'contained' ? '#374151' : '#f9fafb',
+                    backgroundColor: '#374151',
                   },
                 }}
               >
