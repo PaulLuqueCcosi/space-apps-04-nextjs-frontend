@@ -1,7 +1,7 @@
-// Enums y tipos base del API
 export enum Categories {
   Publications = "Article",
   Authors = "Author",
+  // PublicationVenue = "Journal
   PublicationVenue = "Journal",
   // no se tiene
   // Missions = "missions", 
@@ -22,8 +22,8 @@ export interface GraphNodeResponse {
   label: string;
   category: Categories;
   data: Record<string, any>;
-  type?: string;
-  related?: boolean
+  type: Categories;
+  related: boolean
 }
 
 export interface GraphEdgeResponse {

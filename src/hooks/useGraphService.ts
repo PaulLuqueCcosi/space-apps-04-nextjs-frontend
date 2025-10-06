@@ -17,16 +17,18 @@ export function useGraphService() {
     try {
       // Convertir filtros del frontend a request del API
       const apiRequest = GraphAdapter.filtersToApiRequest(filters);
-      
+      console.log("apiRequest", apiRequest )
       // Llamar al servicio con tipos del API
       const apiResponse = await graphService.queryGraph(apiRequest);
       
       // Convertir respuesta del API a modelo del frontend
       const frontendData = GraphAdapter.apiResponseToFrontendData(apiResponse);
-      
+      console.log("data:")
+      console.log(frontendData)
+
       setData(frontendData);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(err instanceof Error ? err.message : 'Unknown error gaaa');
     } finally {
       setLoading(false);
     }

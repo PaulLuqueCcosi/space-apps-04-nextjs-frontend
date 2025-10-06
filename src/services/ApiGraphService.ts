@@ -1,40 +1,29 @@
-import { BaseGraphService } from './abstractions/IGraphService';
 import { GraphData, GraphFilters } from '@/models/GraphModels';
 import { GraphDataResponse } from '@/services/types/graph';
 import { GraphAdapter } from './adapters/GraphAdapter';
 
-export class ApiGraphService extends BaseGraphService {
-  private baseUrl: string;
+export async function fetchGraphData(filters: GraphFilters): Promise<GraphData> {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
-  constructor(baseUrl: string = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') {
-    super();
-    this.baseUrl = baseUrl;
-  }
+  try {
+    const queryParams = GraphAdapter.filtersToQueryParams(filters);
+    const url = `${baseUrl}/graph/query?${queryParams.toString()}`;
 
-  async queryGraph(filters: GraphFilters): Promise<GraphData> {
-    console.log("servicio")
-    try {
-      const queryParams = GraphAdapter.filtersToQueryParams(filters);
-      const url = `${this.baseUrl}/graph/query?${queryParams.toString()}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      console.log("API response 1")
-      const apiResponse: GraphDataResponse = await response.json();
-      console.log(apiResponse)
-      return GraphAdapter.apiResponseToFrontendData(apiResponse);
-
-    } catch (error) {
-      this.handleError(error);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    const apiResponse: GraphDataResponse = await response.json();
+    return GraphAdapter.apiResponseToFrontendData(apiResponse);
+  } catch (error) {
+    console.error('Error al obtener los datos del grafo:', error);
+    throw error;
   }
 }

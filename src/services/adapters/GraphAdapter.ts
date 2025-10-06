@@ -13,16 +13,16 @@ export class GraphAdapter {
   // Convierte filtros del frontend a parámetros de query del API
   static filtersToQueryParams(filters: GraphFilters): URLSearchParams {
     const params = new URLSearchParams();
-    
+
     if (filters.selectedCategories.length > 0) {
       // Convertir Categories[] a string para la URL
       params.append('categories', filters.selectedCategories.map(cat => cat.toString()).join(','));
     }
-    
+
     if (filters.searchTerm) {
       params.append('search', filters.searchTerm);
     }
-    
+
     return params;
   }
 
@@ -49,7 +49,7 @@ export class GraphAdapter {
       nodes: response.nodes.map(node => ({
         id: node.id.toString(),
         label: node.label,
-        category: node.category,
+        category: node.type,
         data: node.data
       })),
       edges: response.edges.map(edge => ({
@@ -86,4 +86,12 @@ export class GraphAdapter {
       .toLowerCase()
       .trim();
   }
+
+
+}
+function stringToCategory(value: string): Categories {
+  console.log("stringToCategori")
+  console.log(value)
+  const match = Object.values(Categories).find(v => v === value);
+  return (match as Categories) ?? Categories.Publications;
 }

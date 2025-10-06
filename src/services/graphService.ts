@@ -1,8 +1,10 @@
 import { GraphDataResponse, GraphFiltersRequest } from '@/services/types/graph';
 import { mockApiResponse } from './graphMockData';
+import axios from 'axios';
 
 export const graphService = {
     async queryGraph(request: GraphFiltersRequest): Promise<GraphDataResponse> {
+        console.log("ingresa aqui en el servicio")
         const isMock = process.env.NEXT_PUBLIC_SERVICE_MODE !== 'api';
 
         if (isMock) {
@@ -70,14 +72,18 @@ export const graphService = {
         if (request.search) {
             params.append('search', request.search);
         }
-
+        console.log("aquiii")
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-        const response = await fetch(`${apiUrl}/graph/query?${params}`);
+        const fullUrl = `${apiUrl}/graph/query?${params.toString()}`;
+        console.log("🌍 Axios GET:", fullUrl);
 
-        if (!response.ok) {
-            throw new Error(`API Error: ${response.status}`);
-        }
+        // ✅ Llamada con axios
+        const response = await axios.get<GraphDataResponse>(fullUrl, {
+            headers: { 'Content-Type': 'application/json' },
+        });
 
-        return response.json();
+        console.log("✅ API response:", response.data);
+        return response.data;
+
     }
 };
