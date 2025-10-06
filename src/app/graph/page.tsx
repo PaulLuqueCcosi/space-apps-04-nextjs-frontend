@@ -60,20 +60,18 @@ export default function GraphPage() {
 
   const handleCloseNodeDrawer = useCallback(() => {
     setNodeDrawerOpen(false);
+    setSelectedNode(null); // Limpiar selección al cerrar
   }, []);
 
   const handleCloseEdgeDrawer = useCallback(() => {
     setEdgeDrawerOpen(false);
+    setSelectedEdge(null); // Limpiar selección al cerrar
   }, []);
 
   const handleCompareNodes = useCallback((sourceNode: any, targetNode: any) => {
     console.log('Comparando nodos:', sourceNode, targetNode);
-    // Aquí puedes implementar la lógica de comparación
-    // Por ejemplo, abrir un modal de comparación o navegar a una página de comparación
     alert(`Comparando:\n${extractDisplayName(sourceNode.label)}\nvs\n${extractDisplayName(targetNode.label)}`);
   }, []);
-
-
 
   // Solo mostrar loading completo en la carga inicial
   if (loading && !data) {
@@ -123,9 +121,6 @@ export default function GraphPage() {
               {/* Grafo Interactivo */}
               {data.nodes.length > 0 && (
                 <div className="bg-white rounded-lg shadow flex-1 flex flex-col min-h-0">
-                  {/* <div className="p-2 sm:p-4 border-b flex-shrink-0">
-                    <h2 className="text-lg sm:text-xl font-semibold">Grafo Interactivo</h2>
-                  </div> */}
                   <div className="flex-1 p-2 sm:p-4 min-h-0">
                     <div className="h-full w-full border rounded-lg overflow-hidden">
                       <GraphLayout
@@ -134,6 +129,8 @@ export default function GraphPage() {
                         onNodeClick={handleNodeClick}
                         onEdgeClick={handleEdgeClick}
                         labelType="all"
+                        selectedNodeId={selectedNode?.id || null}
+                        selectedEdgeId={selectedEdge?.id || null}
                       />
                     </div>
                   </div>
@@ -144,7 +141,7 @@ export default function GraphPage() {
         </div>
       </div>
 
-      {/* Node Detail Drawer - Responsive positioning */}
+      {/* Node Detail Drawer */}
       {nodeDrawerOpen && (
         <NodeDetailDrawer
           open={nodeDrawerOpen}
@@ -153,7 +150,7 @@ export default function GraphPage() {
         />
       )}
 
-      {/* Edge Detail Drawer - Responsive positioning */}
+      {/* Edge Detail Drawer */}
       {edgeDrawerOpen && (
         <EdgeDetailDrawer
           open={edgeDrawerOpen}
@@ -163,7 +160,6 @@ export default function GraphPage() {
           onCompare={handleCompareNodes}
         />
       )}
-      {/* </div> */}
-    </div >
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { ReactNode } from 'react';
+import { ReactNode, useMemo } from 'react';
 import type { 
   GraphNode as ReagraphNode, 
   GraphEdge as ReagraphEdge,
@@ -29,6 +29,8 @@ interface GraphLayoutProps {
   className?: string;
   labelType?: 'all' | 'nodes' | 'edges' | 'none';
   children?: ReactNode;
+  selectedNodeId?: string | null;
+  selectedEdgeId?: string | null;
 }
 
 export const GraphLayout = ({
@@ -38,8 +40,37 @@ export const GraphLayout = ({
   onEdgeClick,
   className = 'h-full w-full',
   labelType = 'all',
-  children
+  children,
+  selectedNodeId,
+  selectedEdgeId
 }: GraphLayoutProps) => {
+  // Modificamos los nodos para resaltar el seleccionado con un borde brillante
+  const processedNodes = useMemo(() => {
+    return nodes.map(node => {
+      if (selectedNodeId && node.id === selectedNodeId) {
+        return {
+          ...node,
+          fill: '#1eedaf', // Color azul para nodo seleccionado
+          size: node.size!! * 1.2, // Aumentar tamaño 50%
+        };
+      }
+      return node;
+    });
+  }, [nodes, selectedNodeId]);
+
+  // Modificamos los edges para resaltar el seleccionado
+  const processedEdges = useMemo(() => {
+    return edges.map(edge => {
+      if (selectedEdgeId && edge.id === selectedEdgeId) {
+        return {
+          ...edge,
+          // size: (edge.size || 1) * 2, // Aumentar grosor
+        };
+      }
+      return edge;
+    });
+  }, [edges, selectedEdgeId]);
+
   // Handlers que convierten los tipos internos de reagraph a los tipos públicos
   const handleNodeClick = onNodeClick 
     ? (node: InternalGraphNode, props?: CollapseProps, event?: ThreeEvent<MouseEvent>) => {
@@ -77,8 +108,8 @@ export const GraphLayout = ({
     <div className={`relative ${className}`}>
       <GraphCanvas
         labelType={labelType}
-        nodes={nodes}
-        edges={edges}
+        nodes={processedNodes}
+        edges={processedEdges}
         onNodeClick={handleNodeClick}
         onEdgeClick={handleEdgeClick}
       />
