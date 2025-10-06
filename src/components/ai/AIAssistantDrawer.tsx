@@ -16,34 +16,34 @@ interface AIAssistantDrawerProps {
     onClose: () => void;
 }
 
-// Datos mock para el chat
+// Mock data for chat
 const mockMessages: Message[] = [
     {
         id: '1',
-        content: '¡Hola! Soy Darwin AI, tu asistente para explorar datos espaciales. ¿En qué puedo ayudarte hoy?',
+        content: 'Hello! I\'m Darwin AI, your assistant for exploring space data. How can I help you today?',
         sender: 'ai',
         timestamp: new Date(Date.now() - 300000)
     },
     {
         id: '2',
-        content: '¿Puedes explicarme qué representa este grafo de datos?',
+        content: 'Can you explain what this data graph represents?',
         sender: 'user',
         timestamp: new Date(Date.now() - 240000)
     },
     {
         id: '3',
-        content: 'Este grafo representa las conexiones entre diferentes entidades espaciales como satélites, estaciones terrestres y misiones. Los nodos muestran cada entidad y las líneas representan las relaciones o comunicaciones entre ellas.',
+        content: 'This graph represents the connections between different space entities such as satellites, ground stations, and missions. The nodes show each entity and the lines represent the relationships or communications between them.',
         sender: 'ai',
         timestamp: new Date(Date.now() - 180000)
     }
 ];
 
 const recommendedQuestions = [
-    "¿Qué patrones puedes identificar en los datos?",
-    "¿Cuáles son las conexiones más importantes?",
-    "¿Cómo puedo filtrar por categorías específicas?",
-    "¿Qué representa cada color en el grafo?",
-    "¿Puedes analizar la densidad de conexiones?"
+    "What patterns can you identify in the data?",
+    "What are the most important connections?",
+    "How can I filter by specific categories?",
+    "What does each color in the graph represent?",
+    "Can you analyze the connection density?"
 ];
 
 export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) => {
@@ -54,7 +54,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
     const handleSendMessage = async () => {
         if (!inputMessage.trim()) return;
 
-        // Agregar mensaje del usuario
+        // Add user message
         const userMessage: Message = {
             id: Date.now().toString(),
             content: inputMessage,
@@ -66,11 +66,11 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
         setInputMessage('');
         setIsTyping(true);
 
-        // Simular respuesta de IA después de 2 segundos
+        // Simulate AI response after 2 seconds
         setTimeout(() => {
             const aiMessage: Message = {
                 id: (Date.now() + 1).toString(),
-                content: `Gracias por tu pregunta: "${inputMessage}". Esta es una respuesta simulada del asistente Darwin AI. En una implementación real, aquí se procesaría tu consulta y se proporcionaría información relevante sobre los datos espaciales.`,
+                content: `Thank you for your question: "${inputMessage}". This is a simulated response from Darwin AI assistant. In a real implementation, your query would be processed here and relevant information about the space data would be provided.`,
                 sender: 'ai',
                 timestamp: new Date()
             };
@@ -161,7 +161,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
                 <div className="p-4 border-t bg-gray-50">
                     <h3 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
                         <Sparkles className="w-4 h-4" />
-                        Preguntas recomendadas
+                        Recommended questions
                     </h3>
                     <div className="space-y-2">
                         {recommendedQuestions.slice(0, 3).map((question, index) => (
@@ -184,7 +184,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
                             value={inputMessage}
                             onChange={(e) => setInputMessage(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                            placeholder="Escribe tu pregunta..."
+                            placeholder="Type your question..."
                             className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             disabled={isTyping}
                         />

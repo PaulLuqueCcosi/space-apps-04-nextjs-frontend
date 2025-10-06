@@ -67,7 +67,7 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1 }}>
                 {getCategoryHeroIcon(node.data?.category || node.category)}
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  Detalle del Nodo
+                  Node Details
                 </Typography>
               </Box>
               <IconButton
@@ -101,14 +101,14 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
               <Accordion defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    Información Básica
+                    Basic Information
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <List dense>
                     <ListItem>
                       <ListItemText
-                        primary="ID del Nodo"
+                        primary="Node ID"
                         secondary={
                           <Typography
                             variant="body2"
@@ -128,7 +128,7 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
                     </ListItem>
                     <ListItem>
                       <ListItemText
-                        primary="Etiqueta Original"
+                        primary="Original Label"
                         secondary={
                           <Typography variant="body2" sx={{ wordBreak: 'break-word' }}>
                             {node.label}
@@ -138,7 +138,7 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
                     </ListItem>
                     <ListItem>
                       <ListItemText
-                        primary="Categoría"
+                        primary="Category"
                         secondary={
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
                             {getCategoryHeroIcon(node.data?.category || node.category)}
@@ -158,7 +158,7 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                      Datos Adicionales ({Object.keys(node.data).length})
+                      Additional Data ({Object.keys(node.data).length})
                     </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
@@ -227,7 +227,7 @@ export default function NodeDetailDrawer({ open, onClose, node }: NodeDetailDraw
             <Divider />
             <Box sx={{ p: 2, backgroundColor: '#f8f9fa' }}>
               <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center', display: 'block' }}>
-                Haz clic en otro nodo para ver sus detalles
+                Click on another node to view its details
               </Typography>
             </Box>
           </>

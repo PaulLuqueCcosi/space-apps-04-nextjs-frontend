@@ -30,9 +30,9 @@ export default function GraphSidebar() {
     isAllCategoriesSelected,
   } = useFilter();
 
-  // Función para manejar la búsqueda
+  // Function to handle search
   const handleSearch = () => {
-    // Crear objeto con todos los filtros y búsqueda
+    // Create object with all filters and search
     const searchData = {
       searchQuery: searchQuery.trim(),
       selectedCategories: selectedCategories,
@@ -40,27 +40,27 @@ export default function GraphSidebar() {
       totalFilters: selectedCategories.length
     };
 
-    // Log para debugging
-    console.log('Búsqueda realizada con filtros:', searchData);
+    // Log for debugging
+    console.log('Search performed with filters:', searchData);
 
-    // Aquí puedes agregar lógica adicional:
-    // - Enviar a analytics
-    // - Llamar APIs específicas
-    // - Guardar en localStorage
-    // - Enviar eventos personalizados
+    // Here you can add additional logic:
+    // - Send to analytics
+    // - Call specific APIs
+    // - Save to localStorage
+    // - Send custom events
 
-    // Ejemplo de evento personalizado
+    // Custom event example
     // if (typeof window !== 'undefined') {
     //   window.dispatchEvent(new CustomEvent('graphSearch', {
     //     detail: searchData
     //   }));
     // }
 
-    // También puedes llamar funciones del contexto si necesitas
-    // realizar acciones específicas con los datos combinados
+    // You can also call context functions if you need to
+    // perform specific actions with the combined data
   };
 
-  // Manejar Enter en el input de búsqueda
+  // Handle Enter key in search input
   const handleSearchKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -76,27 +76,27 @@ export default function GraphSidebar() {
           <button
             onClick={() => setSidebarCollapsed(false)}
             className="p-1 rounded hover:bg-white/10 transition-colors"
-            title="Expandir filtros"
+            title="Expand filters"
           >
             <ChevronRightIcon className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Search compacto - con el mismo espacing que las categorías */}
+        {/* Compact search - with same spacing as categories */}
         <div className="p-1">
           <button
             onClick={() => setSidebarCollapsed(false)}
             className={'w-full h-10 rounded-lg transition-colors bg-gray-100 hover:bg-gray-200 text-black border border-gray-300'}
-            title={searchQuery ? `Búsqueda: ${searchQuery}` : "Abrir búsqueda"}
+            title={searchQuery ? `Search: ${searchQuery}` : "Open search"}
           >
             <MagnifyingGlassIcon className="w-5 h-5 stroke-1 mx-auto" />
           </button>
         </div>
 
-        {/* Línea separadora sutil */}
+        {/* Subtle separator line */}
         <div className="mx-2 my-2 border-t border-gray-300"></div>
 
-        {/* Iconos de categorías clickeables */}
+        {/* Clickable category icons */}
         <div className="flex-1 p-1 space-y-1">
           {categoryConfigs.map((config) => {
             const isSelected = selectedCategories.includes(config.key);
@@ -133,26 +133,26 @@ export default function GraphSidebar() {
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <FunnelIcon className="w-4 h-4" />
-            <h2 className="text-sm font-semibold uppercase tracking-wide">Filtros</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide">Filters</h2>
           </div>
           <button
             onClick={() => setSidebarCollapsed(true)}
             className="p-1 rounded hover:bg-white/10 transition-colors"
-            title="Contraer sidebar"
+            title="Collapse sidebar"
           >
             <ChevronLeftIcon className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* Search Section - Separada */}
+      {/* Search Section - Separated */}
       <div className="p-3 bg-white border-b border-gray-200">
         <div className="flex gap-2">
           <div className="relative flex-1">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
-              placeholder="Buscar..."
+              placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={handleSearchKeyDown}
@@ -169,13 +169,13 @@ export default function GraphSidebar() {
             )}
           </div>
 
-          {/* Botón de búsqueda */}
+          {/* Search button */}
           {searchQuery && (
             <button
               onClick={handleSearch}
               disabled={loading}
               className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
-              title="Buscar"
+              title="Search"
             >
               <MagnifyingGlassIcon className="w-4 h-4" />
             </button>
@@ -230,7 +230,7 @@ export default function GraphSidebar() {
             onClick={handleSelectAllCategories}
             disabled={loading || isAllCategoriesSelected}
             className="p-2 rounded text-green-600 hover:bg-green-50 disabled:opacity-60 transition-colors"
-            title="Seleccionar todo"
+            title="Select all"
           >
             <CheckIcon className="w-4 h-4" />
           </button>
@@ -238,7 +238,7 @@ export default function GraphSidebar() {
             onClick={handleClearAllCategories}
             disabled={loading || selectedCategories.length === 0}
             className="p-2 rounded text-red-600 hover:bg-red-50 disabled:opacity-60 transition-colors"
-            title="Limpiar todo"
+            title="Clear all"
           >
             <XMarkIcon className="w-4 h-4" />
           </button>
@@ -250,14 +250,14 @@ export default function GraphSidebar() {
             className="inline-flex items-center justify-center px-3 py-1 rounded text-xs font-medium text-white"
             style={{ backgroundColor: CATEGORY_COLORS[Categories.Publications] }}
           >
-            {selectedCategories.length}/{categoryConfigs.length} activas
+            {selectedCategories.length}/{categoryConfigs.length} active
           </div>
         </div>
 
         {loading && (
           <div className="text-center mt-2">
             <div className="text-xs text-gray-600">
-              Actualizando...
+              Updating...
             </div>
           </div>
         )}

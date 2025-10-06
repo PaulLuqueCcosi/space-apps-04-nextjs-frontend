@@ -50,17 +50,17 @@ const getCategoryIcon = (category: Categories) => {
         case Categories.Publications:
             return <PaperIcon sx={{ fontSize: '1rem' }} />;
         // case Categories.Experiments:
-            // return <ExperimentsIcon sx={{ fontSize: '1rem' }} />;
+        // return <ExperimentsIcon sx={{ fontSize: '1rem' }} />;
         // case Categories.Missions:
-            // return <MissionsIcon sx={{ fontSize: '1rem' }} />;
+        // return <MissionsIcon sx={{ fontSize: '1rem' }} />;
         case Categories.Authors:
             return <AuthorIcon sx={{ fontSize: '1rem' }} />;
         case Categories.PublicationVenue:
             return <JournalIcon sx={{ fontSize: '1rem' }} />;
         // case Categories.Topic:
-            // return <TopicIcon sx={{ fontSize: '1rem' }} />;
+        // return <TopicIcon sx={{ fontSize: '1rem' }} />;
         // case Categories.Dataset:
-            // return <DatasetIcon sx={{ fontSize: '1rem' }} />;
+        // return <DatasetIcon sx={{ fontSize: '1rem' }} />;
         default:
             return <InfoIcon sx={{ fontSize: '1rem' }} />;
     }
@@ -106,7 +106,7 @@ export default function EdgeDetailDrawer({
                         {title}
                     </Typography>
                     <Typography variant="body2">
-                        Nodo no encontrado
+                        Node not found
                     </Typography>
                 </Paper>
             );
@@ -159,14 +159,14 @@ export default function EdgeDetailDrawer({
                         sx={{ minHeight: 'auto', '& .MuiAccordionSummary-content': { margin: '8px 0' } }}
                     >
                         <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                            Información Básica
+                            Basic Information
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails sx={{ pt: 0 }}>
                         <List dense>
                             <ListItem sx={{ px: 0 }}>
                                 <ListItemText
-                                    primary="Categoría"
+                                    primary="Category"
                                     secondary={
                                         <Typography variant="body2" sx={{ fontWeight: 500, color: categoryColor }}>
                                             {getCategoryDisplayName(node.data?.category || node.category)}
@@ -176,7 +176,7 @@ export default function EdgeDetailDrawer({
                             </ListItem>
                             <ListItem sx={{ px: 0 }}>
                                 <ListItemText
-                                    primary="Nombre Completo"
+                                    primary="Full Name"
                                     secondary={
                                         <Typography variant="body2" sx={{ wordBreak: 'break-word' }}>
                                             {node.label}
@@ -196,7 +196,7 @@ export default function EdgeDetailDrawer({
                             sx={{ minHeight: 'auto', '& .MuiAccordionSummary-content': { margin: '8px 0' } }}
                         >
                             <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                                Datos ({Object.keys(node.data).length})
+                                Data ({Object.keys(node.data).length})
                             </Typography>
                         </AccordionSummary>
                         <AccordionDetails sx={{ pt: 0 }}>
@@ -232,7 +232,7 @@ export default function EdgeDetailDrawer({
                 {/* Statistics */}
                 <Box sx={{ mt: 2, p: 1, backgroundColor: 'white', borderRadius: 1, textAlign: 'center' }}>
                     <Typography variant="caption" color="text.secondary">
-                        {node.data ? Object.keys(node.data).length : 0} propiedades adicionales
+                        {node.data ? Object.keys(node.data).length : 0} additional properties
                     </Typography>
                 </Box>
             </Paper>
@@ -268,7 +268,7 @@ export default function EdgeDetailDrawer({
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1 }}>
                                 <CompareArrows />
                                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                                    Detalle de Conexión
+                                    Connection Details
                                 </Typography>
                             </Box>
                             <IconButton
@@ -287,19 +287,19 @@ export default function EdgeDetailDrawer({
                                 <Typography variant="h6" sx={{ fontWeight: 600, color: '#6366f1', mb: 1 }}>
                                     {relationshipLabel}
                                 </Typography>
-                            
+
                             </Box>
 
                             {/* Connected Nodes - Side by Side */}
                             <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center' }}>
                                 {/* Source Node */}
                                 <Box sx={{ flex: 1, maxWidth: '400px' }}>
-                                    <DetailedNodeCard node={sourceNode} title="Nodo Origen" />
+                                    <DetailedNodeCard node={sourceNode} title="Source Node" />
                                 </Box>
 
                                 {/* Target Node */}
                                 <Box sx={{ flex: 1, maxWidth: '400px' }}>
-                                    <DetailedNodeCard node={targetNode} title="Nodo Destino" />
+                                    <DetailedNodeCard node={targetNode} title="Target Node" />
                                 </Box>
                             </Box>
                         </Box>
@@ -324,14 +324,14 @@ export default function EdgeDetailDrawer({
                                     borderRadius: 2,
                                 }}
                             >
-                                Comparar Nodos Detalladamente
+                                Compare Nodes in Detail
                             </Button>
                             <Typography
                                 variant="body2"
                                 color="text.secondary"
                                 sx={{ textAlign: 'center', display: 'block', mt: 2 }}
                             >
-                                Analiza las diferencias y similitudes entre los nodos conectados por esta relación
+                                Analyze the differences and similarities between nodes connected by this relationship
                             </Typography>
                         </Box>
                     </>

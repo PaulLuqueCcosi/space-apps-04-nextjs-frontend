@@ -2,20 +2,20 @@ import { GraphDataResponse, GraphFiltersRequest, Categories } from '@/services/t
 import { GraphData, GraphFilters } from '@/models/GraphModels';
 
 export class GraphAdapter {
-  // Convierte filtros del frontend a request del API
+  // Convert frontend filters to API request
   static filtersToApiRequest(filters: GraphFilters): GraphFiltersRequest {
     return {
-      categories: filters.selectedCategories, // Ya son Categories[], no necesitan conversión
+      categories: filters.selectedCategories, // Already Categories[], no conversion needed
       search: filters.searchTerm
     };
   }
 
-  // Convierte filtros del frontend a parámetros de query del API
+  // Convert frontend filters to API query parameters
   static filtersToQueryParams(filters: GraphFilters): URLSearchParams {
     const params = new URLSearchParams();
 
     if (filters.selectedCategories.length > 0) {
-      // Convertir Categories[] a string para la URL
+      // Convert Categories[] to string for URL
       params.append('categories', filters.selectedCategories.map(cat => cat.toString()).join(','));
     }
 
@@ -26,7 +26,7 @@ export class GraphAdapter {
     return params;
   }
 
-  // Convierte categorías string a enum
+  // Convert string categories to enum
   static stringToCategories(categories: string[]): Categories[] {
     return categories
       .map(cat => {
@@ -38,18 +38,18 @@ export class GraphAdapter {
       .filter(Boolean) as Categories[];
   }
 
-  // Convierte enum a string para el frontend
+  // Convert enum to string for frontend
   static categoriesToString(categories: Categories[]): string[] {
     return categories.map(cat => cat.toString());
   }
 
-  // Convierte la respuesta del API al formato del frontend
+  // Convert API response to frontend data format
   static apiResponseToFrontendData(response: GraphDataResponse): GraphData {
     return {
       nodes: response.nodes.map(node => ({
         id: node.id.toString(),
         label: node.label,
-        category: node.type,
+        category: stringToCategory(node.type || ''),
         data: node.data
       })),
       edges: response.edges.map(edge => ({
@@ -62,7 +62,7 @@ export class GraphAdapter {
     };
   }
 
-  // Métodos utilitarios para extraer información de los datos
+  // Utility methods to extract information from data
   static extractCategoryFromLabel(label: string): string {
     const colonIndex = label.indexOf(':');
     if (colonIndex > 0) {
@@ -90,7 +90,7 @@ export class GraphAdapter {
 
 }
 function stringToCategory(value: string): Categories {
-  console.log("stringToCategori")
+  console.log("stringToCategory")
   console.log(value)
   const match = Object.values(Categories).find(v => v === value);
   return (match as Categories) ?? Categories.Publications;

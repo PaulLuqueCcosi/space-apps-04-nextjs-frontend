@@ -34,7 +34,7 @@ export default function HomePage() {
 
                 {/* Subtitle */}
                 <p className="text-xl md:text-2xl text-gray-800 mb-12 max-w-md font-light">
-                    Nuestro lema o el propósito de la web
+                    Our motto or the purpose of the web
                 </p>
 
                 {/* CTA Button */}
@@ -51,7 +51,7 @@ export default function HomePage() {
                         <circle cx="11" cy="11" r="8" strokeWidth="2"></circle>
                         <path strokeLinecap="round" strokeWidth="2" d="M21 21l-4.35-4.35"></path>
                     </svg>
-                    EMPIEZA EL VIAJE
+                    START THE JOURNEY
                 </button>
             </div>
 
