@@ -18,6 +18,8 @@ import {
     Slide,
     Button,
     Grid,
+    CircularProgress,
+    Alert,
 } from '@mui/material';
 import {
     Close as CloseIcon,
@@ -33,9 +35,12 @@ import {
     CompareArrows as CompareIcon,
     TrendingFlat as ArrowIcon,
     SwapHoriz as CompareArrows,
+    Psychology as AnalysisIcon,
 } from '@mui/icons-material';
 import { Categories } from '@/models/GraphModels';
 import { extractDisplayName, formatRelationship } from '@/utils/graphUtils';
+import { graphService } from '@/services/graphService';
+import ReactMarkdown from 'react-markdown';
 
 interface EdgeDetailDrawerProps {
     open: boolean;
@@ -75,6 +80,17 @@ export default function EdgeDetailDrawer({
     nodes,
     onCompare
 }: EdgeDetailDrawerProps) {
+    const [analysisResult, setAnalysisResult] = React.useState<string | null>(null);
+    const [isAnalyzing, setIsAnalyzing] = React.useState(false);
+    const [analysisError, setAnalysisError] = React.useState<string | null>(null);
+
+    // Limpiar el análisis cuando cambie el edge
+    React.useEffect(() => {
+        setAnalysisResult(null);
+        setAnalysisError(null);
+        setIsAnalyzing(false);
+    }, [edge?.id]);
+
     if (!edge && !open) return null;
 
     // Encontrar los nodos source y target
@@ -83,8 +99,27 @@ export default function EdgeDetailDrawer({
 
     const relationshipLabel = edge ? formatRelationship(edge.label || '') : '';
 
-    const handleCompare = () => {
-        if (sourceNode && targetNode && onCompare) {
+    const handleCompare = async () => {
+        if (!sourceNode || !targetNode) return;
+
+        setIsAnalyzing(true);
+        setAnalysisError(null);
+        setAnalysisResult(null);
+
+        try {
+            const result = await graphService.analyzeNodes({
+                first_node_id: sourceNode.id,
+                second_node_id: targetNode.id
+            });
+            setAnalysisResult(result.response);
+        } catch (error) {
+            console.error('Error analyzing nodes:', error);
+            setAnalysisError('Failed to analyze the relationship between nodes. Please try again.');
+        } finally {
+            setIsAnalyzing(false);
+        }
+
+        if (onCompare) {
             onCompare(sourceNode, targetNode);
         }
     };
@@ -291,7 +326,7 @@ export default function EdgeDetailDrawer({
                             </Box>
 
                             {/* Connected Nodes - Side by Side */}
-                            <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center' }}>
+                            <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center', mb: 3 }}>
                                 {/* Source Node */}
                                 <Box sx={{ flex: 1, maxWidth: '400px' }}>
                                     <DetailedNodeCard node={sourceNode} title="Source Node" />
@@ -302,6 +337,133 @@ export default function EdgeDetailDrawer({
                                     <DetailedNodeCard node={targetNode} title="Target Node" />
                                 </Box>
                             </Box>
+
+                            {/* Analysis Result Section */}
+                            {(isAnalyzing || analysisResult || analysisError) && (
+                                <Box sx={{ px: 2 }}>
+                                    <Paper
+                                        elevation={2}
+                                        sx={{
+                                            p: 3,
+                                            borderRadius: 2,
+                                            backgroundColor: '#f8f9fa',
+                                            border: '2px solid #6366f1',
+                                        }}
+                                    >
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                                            <AnalysisIcon sx={{ color: '#6366f1', fontSize: '1.5rem' }} />
+                                            <Typography variant="h6" sx={{ fontWeight: 600, color: '#6366f1' }}>
+                                                AI Analysis
+                                            </Typography>
+                                        </Box>
+
+                                        {isAnalyzing && (
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, py: 3 }}>
+                                                <CircularProgress size={24} sx={{ color: '#6366f1' }} />
+                                                <Typography variant="body2" color="text.secondary">
+                                                    Analyzing the relationship between nodes...
+                                                </Typography>
+                                            </Box>
+                                        )}
+
+                                        {analysisError && (
+                                            <Alert severity="error" sx={{ mb: 0 }}>
+                                                {analysisError}
+                                            </Alert>
+                                        )}
+
+                                        {analysisResult && !isAnalyzing && (
+                                            <Paper
+                                                elevation={0}
+                                                sx={{
+                                                    p: 2,
+                                                    backgroundColor: 'white',
+                                                    borderRadius: 1,
+                                                    border: '1px solid #e0e0e0',
+                                                    '& h1': {
+                                                        fontSize: '1.5rem',
+                                                        fontWeight: 600,
+                                                        marginTop: '1rem',
+                                                        marginBottom: '0.5rem',
+                                                        color: '#1a1a1a',
+                                                    },
+                                                    '& h2': {
+                                                        fontSize: '1.25rem',
+                                                        fontWeight: 600,
+                                                        marginTop: '1rem',
+                                                        marginBottom: '0.5rem',
+                                                        color: '#1a1a1a',
+                                                    },
+                                                    '& h3': {
+                                                        fontSize: '1.1rem',
+                                                        fontWeight: 600,
+                                                        marginTop: '0.75rem',
+                                                        marginBottom: '0.5rem',
+                                                        color: '#1a1a1a',
+                                                    },
+                                                    '& p': {
+                                                        lineHeight: 1.7,
+                                                        marginBottom: '0.75rem',
+                                                        color: '#333',
+                                                    },
+                                                    '& ul, & ol': {
+                                                        paddingLeft: '1.5rem',
+                                                        marginBottom: '0.75rem',
+                                                    },
+                                                    '& li': {
+                                                        marginBottom: '0.25rem',
+                                                        lineHeight: 1.6,
+                                                    },
+                                                    '& code': {
+                                                        backgroundColor: '#f5f5f5',
+                                                        padding: '0.125rem 0.25rem',
+                                                        borderRadius: '0.25rem',
+                                                        fontSize: '0.875rem',
+                                                        fontFamily: 'monospace',
+                                                    },
+                                                    '& pre': {
+                                                        backgroundColor: '#f5f5f5',
+                                                        padding: '1rem',
+                                                        borderRadius: '0.5rem',
+                                                        overflow: 'auto',
+                                                        marginBottom: '0.75rem',
+                                                    },
+                                                    '& pre code': {
+                                                        backgroundColor: 'transparent',
+                                                        padding: 0,
+                                                    },
+                                                    '& blockquote': {
+                                                        borderLeft: '4px solid #6366f1',
+                                                        paddingLeft: '1rem',
+                                                        marginLeft: 0,
+                                                        marginBottom: '0.75rem',
+                                                        color: '#555',
+                                                        fontStyle: 'italic',
+                                                    },
+                                                    '& strong': {
+                                                        fontWeight: 600,
+                                                        color: '#1a1a1a',
+                                                    },
+                                                    '& em': {
+                                                        fontStyle: 'italic',
+                                                    },
+                                                    '& a': {
+                                                        color: '#6366f1',
+                                                        textDecoration: 'none',
+                                                        '&:hover': {
+                                                            textDecoration: 'underline',
+                                                        },
+                                                    },
+                                                }}
+                                            >
+                                                <ReactMarkdown>
+                                                    {analysisResult}
+                                                </ReactMarkdown>
+                                            </Paper>
+                                        )}
+                                    </Paper>
+                                </Box>
+                            )}
                         </Box>
 
                         {/* Footer with Compare Button */}

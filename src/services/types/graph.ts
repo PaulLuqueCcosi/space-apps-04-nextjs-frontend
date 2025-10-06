@@ -43,3 +43,13 @@ export interface GraphDataResponse {
   };
   ai_response: string;
 }
+
+// ------------ Analyze types --------
+export interface AnalyzeNodesRequest {
+  first_node_id: number;
+  second_node_id: number;
+}
+
+export interface AnalyzeNodesResponse {
+  response: string;
+}

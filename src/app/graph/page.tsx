@@ -71,8 +71,8 @@ export default function GraphPage() {
   }, []);
 
   const handleCompareNodes = useCallback((sourceNode: any, targetNode: any) => {
-    console.log('Comparing nodes:', sourceNode, targetNode);
-    alert(`Comparing:\n${extractDisplayName(sourceNode.label)}\nvs\n${extractDisplayName(targetNode.label)}`);
+    // console.log('Comparing nodes:', sourceNode, targetNode);
+    // alert(`Comparing:\n${extractDisplayName(sourceNode.label)}\nvs\n${extractDisplayName(targetNode.label)}`);
   }, []);
 
   const handleOpenAIAssistant = useCallback(() => {

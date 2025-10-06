@@ -1,4 +1,4 @@
-import { GraphDataResponse, GraphFiltersRequest } from '@/services/types/graph';
+import { GraphDataResponse, GraphFiltersRequest, AnalyzeNodesRequest, AnalyzeNodesResponse } from '@/services/types/graph';
 import { mockApiResponse } from './graphMockData';
 import axios from 'axios';
 
@@ -85,5 +85,23 @@ export const graphService = {
         console.log("✅ API response:", response.data);
         return response.data;
 
+    },
+
+    async analyzeNodes(request: AnalyzeNodesRequest): Promise<AnalyzeNodesResponse> {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+        const params = new URLSearchParams({
+            first_node_id: request.first_node_id.toString(),
+            second_node_id: request.second_node_id.toString()
+        });
+
+        const fullUrl = `${apiUrl}/graph/analyze?${params.toString()}`;
+        console.log("🔍 Analyzing nodes:", fullUrl);
+
+        const response = await axios.get<AnalyzeNodesResponse>(fullUrl, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        console.log("✅ Analyze response:", response.data);
+        return response.data;
     }
 };
