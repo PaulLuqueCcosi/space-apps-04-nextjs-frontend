@@ -51,7 +51,7 @@ export function FilterProvider({ children }: FilterProviderProps) {
     const newSelection = selectedCategories.includes(category)
       ? selectedCategories.filter(c => c !== category)
       : [...selectedCategories, category];
-    
+    console.log("NUEVA DATA", {newSelection})
     setSelectedCategories(newSelection);
   }, [selectedCategories, loading]);
 

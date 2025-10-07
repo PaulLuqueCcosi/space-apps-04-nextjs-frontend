@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { useGraphWithFilters } from '@/hooks/useGraphWithFilters';
+import { useGraphContext } from '@/contexts/GraphContext';
 import { useFilter } from '@/contexts/FilterContext';
 import { extractDisplayName } from '@/utils/graphUtils';
 import GraphSidebar from '@/components/layout/GraphSidebar';
@@ -12,6 +13,7 @@ import { AIAssistantDrawer, AIFloatingButton } from '@/components/ai';
 
 export default function GraphPage() {
   const { data, loading, error, hasActiveFilters, selectedCategories } = useGraphWithFilters();
+  const { isFromAI } = useGraphContext();
   const [selectedNode, setSelectedNode] = useState<any>(null);
   const [selectedEdge, setSelectedEdge] = useState<any>(null);
   const [nodeDrawerOpen, setNodeDrawerOpen] = useState(false);
@@ -116,7 +118,17 @@ export default function GraphPage() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-h-0">
         <div className="p-2 sm:p-4 h-full flex flex-col">
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4">Graph Visualization</h1>
+          <div className="flex items-center justify-between mb-2 sm:mb-4">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">Graph Visualization</h1>
+            {isFromAI && (
+              <div className="flex items-center gap-2 bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Data updated by AI
+              </div>
+            )}
+          </div>
 
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-3 sm:px-4 py-2 sm:py-3 rounded mb-2 sm:mb-4 text-sm sm:text-base">

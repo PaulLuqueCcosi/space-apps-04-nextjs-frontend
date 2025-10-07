@@ -3,6 +3,12 @@
 import { useState } from 'react';
 import { X, Send, Bot, User, Sparkles } from 'lucide-react';
 import { Slide } from '@mui/material';
+import { useFilter } from '@/contexts/FilterContext';
+import { useGraphContext } from '@/contexts/GraphContext';
+import { graphService } from '@/services/graphService';
+import { Categories } from '@/services/types/graph';
+import { GraphData } from '@/models/GraphModels';
+import { GraphAdapter } from '@/services';
 
 interface Message {
     id: string;
@@ -16,93 +22,59 @@ interface AIAssistantDrawerProps {
     onClose: () => void;
 }
 
-// Mock data for chat
+// Initial welcome message
 const mockMessages: Message[] = [
     {
         id: '1',
-        content: 'Hello! I\'m Darwin AI, your assistant for exploring space data. How can I help you today?',
+        content: 'Hello! I\'m Darwin AI, your assistant for exploring scientific data. You can ask me about any topic and I\'ll search for relevant information in the database using the current filters. How can I help you?',
         sender: 'ai',
         timestamp: new Date(Date.now() - 300000)
-    },
-    {
-        id: '2',
-        content: 'Can you explain what this data graph represents?',
-        sender: 'user',
-        timestamp: new Date(Date.now() - 240000)
-    },
-    {
-        id: '3',
-        content: 'This graph represents the connections between different space entities such as satellites, ground stations, and missions. The nodes show each entity and the lines represent the relationships or communications between them.',
-        sender: 'ai',
-        timestamp: new Date(Date.now() - 180000)
     }
 ];
 
 const recommendedQuestions = [
-    "What patterns can you identify in the data?",
-    "What are the most important connections?",
-    "How can I filter by specific categories?",
-    "What does each color in the graph represent?",
-    "Can you analyze the connection density?"
+    "How does spaceflight affect muscle and bone health in astronauts?",
+    "What are the effects of cosmic radiation on DNA and cancer risk?",
+    "How do plants adapt to microgravity conditions in space?",
+    // "artificial intelligence",
+    // "quantum computing",
+    // "renewable energy"
 ];
 
 export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) => {
     const [messages, setMessages] = useState<Message[]>(mockMessages);
     const [inputMessage, setInputMessage] = useState('');
     const [isTyping, setIsTyping] = useState(false);
+    const { selectedCategories } = useFilter();
+    const { updateGraphData } = useGraphContext();
 
-    const generateAIResponse = (userInput: string): string => {
-        const input = userInput.toLowerCase();
+    const generateAIResponse = async (userInput: string): Promise<GraphData | undefined> => {
+        try {
+            // Convertir selectedCategories (strings) a Categories enum
+            const categoriesEnum = selectedCategories
+                .map(cat => Object.values(Categories).find(enumValue => enumValue === cat))
+                .filter(Boolean) as Categories[];
 
-        // Pattern detection
-        if (input.includes('pattern') || input.includes('identify')) {
-            return "Based on the current graph analysis, I can identify several key patterns:\n\n1. **Hub Nodes**: Publications with high citation counts act as central hubs, connecting multiple authors and venues.\n\n2. **Temporal Clusters**: Research topics tend to cluster around specific time periods, showing evolution of scientific focus.\n\n3. **Collaboration Networks**: Strong interconnections between certain author groups suggest established research collaborations.\n\n4. **Cross-disciplinary Links**: Some nodes bridge different categories, indicating interdisciplinary research areas.";
+            console.log("API AI")
+            // Llamar al servicio con el mensaje del usuario como search
+            const response = await graphService.queryGraph({
+                categories: categoriesEnum,
+                search: userInput
+            });
+
+            console.log("responde api ai", {response})
+
+            // use adapter 
+            const dataAdapted = GraphAdapter.apiResponseToFrontendData(response)
+            console.log(dataAdapted)
+            return dataAdapted;
+            // Retornar la respuesta de AI del servicio
+            // return response.ai_response || "Lo siento, no pude generar una respuesta en este momento. Por favor, intenta con otra pregunta.";
+        } catch (error) {
+            console.error('Error calling graph service:', error);
+            return undefined
+            // return "Ocurrió un error al procesar tu consulta. Por favor, intenta nuevamente.";
         }
-
-        // Connection importance
-        if (input.includes('connection') || input.includes('important') || input.includes('relationship')) {
-            return "The most significant connections in this graph are:\n\n• **Author-Publication links**: These show research output and expertise areas\n• **Publication-Venue relationships**: Indicate where research is being published and disseminated\n• **Citation networks**: High-weight edges represent frequently cited works that influence the field\n• **Co-authorship patterns**: Reveal collaborative research teams and networks\n\nNodes with the highest degree centrality are typically the most influential in the network.";
-        }
-
-        // Filtering
-        if (input.includes('filter') || input.includes('categor')) {
-            return "To filter by specific categories:\n\n1. Use the sidebar on the left to select/deselect categories\n2. Click on individual category buttons to toggle them\n3. Use 'Select All' or 'Clear All' for quick filtering\n4. The search bar allows text-based filtering across all nodes\n\nCurrently available categories include Publications, Authors, and Publication Venues. Each category is color-coded for easy identification in the graph.";
-        }
-
-        // Colors
-        if (input.includes('color') || input.includes('represent')) {
-            return "Each color in the graph represents a different entity category:\n\n🔵 **Blue**: Publications - Research papers and articles\n🟢 **Green**: Authors - Researchers and scientists\n🟣 **Purple**: Publication Venues - Journals and conferences\n\nThe color intensity may also indicate node importance or connection density. Hover over any node to see detailed information about that entity.";
-        }
-
-        // Density analysis
-        if (input.includes('densit') || input.includes('analyz')) {
-            return "Analyzing the connection density:\n\n**Overall Metrics:**\n• Average degree: Moderate connectivity across the network\n• Clustering coefficient: Shows strong local groupings\n• Network diameter: Indicates relatively short paths between nodes\n\n**Key Observations:**\n• Dense clusters around highly-cited publications\n• Sparse connections in emerging research areas\n• Bridge nodes connecting different research communities\n\nThis structure suggests a well-connected research ecosystem with distinct specialization areas.";
-        }
-
-        // Graph explanation
-        if (input.includes('graph') || input.includes('explain') || input.includes('what is')) {
-            return "This knowledge graph visualizes the relationships within scientific research data:\n\n**Nodes** represent entities like:\n• Publications (research papers)\n• Authors (researchers)\n• Venues (journals/conferences)\n\n**Edges** show relationships such as:\n• Authorship (who wrote what)\n• Citations (which papers reference others)\n• Publication venues (where research appears)\n\nYou can interact with the graph by clicking nodes for details, filtering by category, or searching for specific entities.";
-        }
-
-        // Data source
-        if (input.includes('data') || input.includes('source') || input.includes('where')) {
-            return "This graph integrates data from multiple scientific databases and repositories, including publication metadata, citation networks, and author information. The data represents interconnected research entities and their relationships, allowing you to explore the landscape of scientific knowledge and collaboration patterns.";
-        }
-
-        // Navigation help
-        if (input.includes('how') || input.includes('use') || input.includes('navigate')) {
-            return "Here's how to navigate the graph:\n\n**Interaction:**\n• Click nodes to view detailed information\n• Click edges to see connection details\n• Drag to pan around the graph\n• Scroll to zoom in/out\n\n**Filtering:**\n• Use the sidebar to filter by category\n• Search for specific entities\n• Toggle categories on/off\n\n**Analysis:**\n• Compare nodes using the edge detail drawer\n• Explore recommended questions for insights";
-        }
-
-        // Default response
-        const defaultResponses = [
-            "That's an interesting question! The graph shows complex relationships between publications, authors, and venues. Could you be more specific about what aspect you'd like to explore?",
-            "I can help you understand the data better. The network visualizes scientific research connections. What particular area would you like to focus on?",
-            "Based on the current graph data, I can provide insights about patterns, connections, or specific entities. What would you like to know more about?",
-            "The graph contains rich information about research networks. I can help you analyze patterns, identify key nodes, or explain relationships. What interests you most?"
-        ];
-
-        return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
     };
 
     const handleSendMessage = async () => {
@@ -122,21 +94,40 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
         setInputMessage('');
         setIsTyping(true);
 
-        // Variable delay based on message length (1.5-4 seconds)
-        const baseDelay = 1500;
-        const lengthDelay = Math.min(currentInput.length * 20, 2500);
-        const totalDelay = baseDelay + lengthDelay;
-
-        setTimeout(() => {
+        try {
+            // Llamar al servicio de AI
+            const dataResponse = await generateAIResponse(currentInput);
+            const aiResponse = dataResponse?.ai_response || "Sorry, an error occurred while processing your query. Please try again."
+            
             const aiMessage: Message = {
                 id: (Date.now() + 1).toString(),
-                content: generateAIResponse(currentInput),
+                content: aiResponse,
                 sender: 'ai',
                 timestamp: new Date()
             };
+            
             setMessages(prev => [...prev, aiMessage]);
+
+            // Actualizar el grafo con los nuevos datos si existen
+            if (dataResponse) {
+                console.log('🤖 AI Chat updating graph with new data:', dataResponse);
+                updateGraphData(dataResponse, true); // true indica que viene del AI
+            }
+            
+        } catch (error) {
+            console.error('Error generating AI response:', error);
+            
+            const errorMessage: Message = {
+                id: (Date.now() + 1).toString(),
+                content: "Sorry, an error occurred while processing your query. Please try again.",
+                sender: 'ai',
+                timestamp: new Date()
+            };
+            
+            setMessages(prev => [...prev, errorMessage]);
+        } finally {
             setIsTyping(false);
-        }, totalDelay);
+        }
     };
 
     const handleRecommendedQuestion = (question: string) => {
@@ -144,7 +135,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
     };
 
     const formatTime = (date: Date) => {
-        return date.toLocaleTimeString('es-ES', {
+        return date.toLocaleTimeString('en-US', {
             hour: '2-digit',
             minute: '2-digit'
         });
@@ -221,7 +212,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
                 <div className="p-4 border-t bg-gray-50">
                     <h3 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
                         <Sparkles className="w-4 h-4" />
-                        Recommended questions
+                        Suggested Searches
                     </h3>
                     <div className="space-y-2">
                         {recommendedQuestions.slice(0, 3).map((question, index) => (
@@ -244,7 +235,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
                             value={inputMessage}
                             onChange={(e) => setInputMessage(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                            placeholder="Type your question..."
+                            placeholder="Type your search or question..."
                             className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             disabled={isTyping}
                         />

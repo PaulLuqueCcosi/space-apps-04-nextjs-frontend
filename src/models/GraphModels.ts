@@ -6,6 +6,12 @@ export interface GraphNode {
   label: string;
   category: Categories;
   data: Record<string, any>;
+  /**
+   * Indica si el nodo debe mostrarse normalmente (true) o con estilo opaco/gris (false).
+   * Los nodos con highlighted: false aparecen más pequeños, grises y semi-transparentes,
+   * pero siguen siendo interactivos (se puede hacer click en ellos).
+   */
+  highlighted: boolean;
 }
 
 export interface GraphEdge {
@@ -23,6 +29,7 @@ export interface GraphData {
     totalEdges: number;
     categoriesQueried: Categories[];
   };
+  ai_response: string;
 }
 
 export interface GraphFilters {

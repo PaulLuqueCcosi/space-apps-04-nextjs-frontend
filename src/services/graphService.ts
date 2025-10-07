@@ -70,19 +70,19 @@ export const graphService = {
             params.append('categories', request.categories.join(','));
         }
         if (request.search) {
-            params.append('search', request.search);
+            params.append('query', request.search);
         }
-        console.log("aquiii")
+        // console.log("aquiii")
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
         const fullUrl = `${apiUrl}/graph/query?${params.toString()}`;
-        console.log("🌍 Axios GET:", fullUrl);
+        // console.log("🌍 Axios GET:", fullUrl);
 
         // ✅ Llamada con axios
         const response = await axios.get<GraphDataResponse>(fullUrl, {
             headers: { 'Content-Type': 'application/json' },
         });
 
-        console.log("✅ API response:", response.data);
+        // console.log("✅ API response:", response.data);
         return response.data;
 
     },
@@ -95,13 +95,13 @@ export const graphService = {
         });
 
         const fullUrl = `${apiUrl}/graph/analyze?${params.toString()}`;
-        console.log("🔍 Analyzing nodes:", fullUrl);
+        // console.log("🔍 Analyzing nodes:", fullUrl);
 
         const response = await axios.get<AnalyzeNodesResponse>(fullUrl, {
             headers: { 'Content-Type': 'application/json' },
         });
 
-        console.log("✅ Analyze response:", response.data);
+        // console.log("✅ Analyze response:", response.data);
         return response.data;
     }
 };

@@ -20,14 +20,16 @@ export function useGraph() {
       
       // Llamar al servicio con tipos del API
       const apiResponse = await graphService.queryGraph(apiRequest);
-      console.log("APIIII", apiResponse)
+      // console.log("APIIII", apiResponse)
       
       // Convertir respuesta del API a modelo del frontend
       const frontendData = GraphAdapter.apiResponseToFrontendData(apiResponse);
-      console.log("frontendData", frontendData)
+      // console.log("frontendData", frontendData)
       setData(frontendData);
+      return frontendData;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
+      return null;
     } finally {
       setLoading(false);
     }
