@@ -26,8 +26,10 @@ export function useGraph() {
       const frontendData = GraphAdapter.apiResponseToFrontendData(apiResponse);
       // console.log("frontendData", frontendData)
       setData(frontendData);
+      return frontendData;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
+      return null;
     } finally {
       setLoading(false);
     }

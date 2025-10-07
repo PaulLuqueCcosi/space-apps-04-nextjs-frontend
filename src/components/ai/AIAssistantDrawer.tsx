@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { X, Send, Bot, User, Sparkles } from 'lucide-react';
 import { Slide } from '@mui/material';
 import { useFilter } from '@/contexts/FilterContext';
+import { useGraphContext } from '@/contexts/GraphContext';
 import { graphService } from '@/services/graphService';
 import { Categories } from '@/services/types/graph';
 import { GraphData } from '@/models/GraphModels';
@@ -45,6 +46,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
     const [inputMessage, setInputMessage] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const { selectedCategories } = useFilter();
+    const { updateGraphData } = useGraphContext();
 
     const generateAIResponse = async (userInput: string): Promise<GraphData | undefined> => {
         try {
@@ -106,8 +108,11 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
             
             setMessages(prev => [...prev, aiMessage]);
 
-
-            // update graph
+            // Actualizar el grafo con los nuevos datos si existen
+            if (dataResponse) {
+                console.log('🤖 AI Chat updating graph with new data:', dataResponse);
+                updateGraphData(dataResponse, true); // true indica que viene del AI
+            }
             
         } catch (error) {
             console.error('Error generating AI response:', error);
