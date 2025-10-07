@@ -1,36 +1,17 @@
 'use client';
 
 import { GraphLayout } from './GraphLayout';
-import { createGraphNodes, NodeData } from './utils';
-import { Categories } from '@/models/GraphModels';
+import { convertModelNodesToReagraph } from './utils';
+import { Categories, GraphNode } from '@/models/GraphModels';
 
 export const GraphExample = () => {
-    // Datos de ejemplo usando las categorías reales
-    const nodesData: NodeData[] = [
-        // {
-        //     id: 'mars-mission-2024',
-        //     label: 'Mars Mission 2024',
-        //     category: Categories.Missions,
-        //     data: {
-        //         status: 'active',
-        //         launchDate: '2024-03-15',
-        //         agency: 'NASA'
-        //     }
-        // },
-        // {
-        //     id: 'soil-analysis-exp',
-        //     label: 'Soil Analysis Experiment',
-        //     category: Categories.Experiments,
-        //     data: {
-        //         type: 'geological',
-        //         duration: '6 months',
-        //         samples: 150
-        //     }
-        // },
+    // Datos de ejemplo usando GraphNode del modelo con propiedad highlighted
+    const modelNodes: GraphNode[] = [
         {
             id: 'dr-jane-smith',
             label: 'Dr. Jane Smith',
             category: Categories.Authors,
+            highlighted: true, // Nodo activo - se muestra normal
             data: {
                 affiliation: 'MIT',
                 specialization: 'Astrobiology',
@@ -41,34 +22,42 @@ export const GraphExample = () => {
             id: 'mars-geology-paper',
             label: 'Mars Geological Survey 2024',
             category: Categories.Publications,
+            highlighted: true, // Nodo activo - se muestra normal
             data: {
                 journal: 'Nature Astronomy',
                 citations: 23,
                 year: 2024
             }
         },
-        // {
-        //     id: 'astrobiology-topic',
-        //     label: 'Astrobiology',
-        //     category: Categories.Topic,
-        //     data: {
-        //         relatedPapers: 156,
-        //         trending: true
-        //     }
-        // }
+        {
+            id: 'nature-astronomy',
+            label: 'Nature Astronomy',
+            category: Categories.PublicationVenue,
+            highlighted: false, // Nodo filtrado - se muestra opaco y gris
+            data: {
+                type: 'journal',
+                impactFactor: 14.1,
+                publisher: 'Nature Publishing Group'
+            }
+        },
+        {
+            id: 'dr-john-doe',
+            label: 'Dr. John Doe',
+            category: Categories.Authors,
+            highlighted: false, // Nodo filtrado - se muestra opaco y gris
+            data: {
+                affiliation: 'Stanford',
+                specialization: 'Planetary Science',
+                publications: 32
+            }
+        }
     ];
 
-    // Crear nodos con estilos
-    const nodes = createGraphNodes(nodesData);
+    // Convertir nodos del modelo a nodos de reagraph (aplicará estilos según highlighted)
+    const nodes = convertModelNodesToReagraph(modelNodes);
 
     // Edges de ejemplo
     const edges = [
-        {
-            id: 'mission-experiment',
-            source: 'mars-mission-2024',
-            target: 'soil-analysis-exp',
-            label: 'includes'
-        },
         {
             id: 'author-publication',
             source: 'dr-jane-smith',
@@ -76,16 +65,16 @@ export const GraphExample = () => {
             label: 'authored'
         },
         {
-            id: 'experiment-publication',
-            source: 'soil-analysis-exp',
-            target: 'mars-geology-paper',
-            label: 'results in'
+            id: 'publication-venue',
+            source: 'mars-geology-paper',
+            target: 'nature-astronomy',
+            label: 'published in'
         },
         {
-            id: 'publication-topic',
-            source: 'mars-geology-paper',
-            target: 'astrobiology-topic',
-            label: 'relates to'
+            id: 'author-venue',
+            source: 'dr-john-doe',
+            target: 'nature-astronomy',
+            label: 'published in'
         }
     ];
 

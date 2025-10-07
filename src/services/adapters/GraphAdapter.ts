@@ -50,7 +50,8 @@ export class GraphAdapter {
         id: node.id.toString(),
         label: node.label,
         category: stringToCategory(node.type || ''),
-        data: node.data
+        data: node.data,
+        highlighted: node.related
       })),
       edges: response.edges.map(edge => ({
         id: edge.id.toString(),

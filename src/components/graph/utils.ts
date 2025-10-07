@@ -61,12 +61,35 @@ export function getAvailableCategories(): Categories[] {
  * Convierte un GraphNode del modelo a un nodo de reagraph
  */
 export function convertModelNodeToReagraph(modelNode: import('@/models/GraphModels').GraphNode): ReagraphNode {
-  return createGraphNode({
+  const config = getReagraphCategoryConfig(modelNode.category);
+  
+  // Si el nodo no está highlighted, aplicar estilo opaco y gris
+  const isHighlighted = modelNode.highlighted;
+  const nodeStyle = isHighlighted 
+    ? {
+        fill: config.fill,
+        size: config.size,
+        opacity: 1.0
+      }
+    : {
+        fill: '#9ca3af', // Color gris
+        size: config.size, // Ligeramente más pequeño
+        opacity: 0.5 // Opacidad reducida
+      };
+
+  return {
     id: modelNode.id,
     label: modelNode.label,
-    category: modelNode.category,
-    data: modelNode.data
-  });
+    fill: nodeStyle.fill,
+    size: nodeStyle.size,
+    icon: config.icon,
+    data: {
+      category: modelNode.category,
+      highlighted: modelNode.highlighted,
+      opacity: nodeStyle.opacity,
+      ...modelNode.data
+    }
+  };
 }
 
 /**

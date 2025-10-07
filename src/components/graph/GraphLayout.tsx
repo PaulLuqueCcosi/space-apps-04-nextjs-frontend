@@ -48,7 +48,7 @@ export const GraphLayout = ({
   selectedEdgeId,
   draggable = true
 }: GraphLayoutProps) => {
-  // Modificamos los nodos para resaltar el seleccionado con un borde brillante
+  // Modificamos los nodos para resaltar el seleccionado y aplicar estilos de highlighted
   const processedNodes = useMemo(() => {
     // Encontrar el edge seleccionado para resaltar sus nodos conectados
     const selectedEdge = selectedEdgeId ? edges.find(edge => edge.id === selectedEdgeId) : null;
@@ -67,11 +67,13 @@ export const GraphLayout = ({
       if (selectedEdge && (node.id === selectedEdge.source || node.id === selectedEdge.target)) {
         return {
           ...node,
-          fill: '#1eedaf', // Color rojo para nodos conectados al edge seleccionado
+          fill: '#1eedaf', // Color verde para nodos conectados al edge seleccionado
           // size: (node.size || 10) * 1.3, // Aumentar tamaño 30%
         };
       }
 
+      // Aplicar estilo de nodo no highlighted (ya viene procesado desde utils.ts)
+      // Los nodos no highlighted ya tienen fill gris y size reducido
       return node;
     });
   }, [nodes, selectedNodeId, selectedEdgeId, edges]);
