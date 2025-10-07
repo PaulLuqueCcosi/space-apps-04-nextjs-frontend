@@ -59,7 +59,8 @@ export class GraphAdapter {
         target: edge.target.toString(),
         label: edge.label
       })),
-      metadata: response.metadata
+      metadata: response.metadata,
+      ai_response: response.ai_response
     };
   }
 
@@ -91,8 +92,8 @@ export class GraphAdapter {
 
 }
 function stringToCategory(value: string): Categories {
-  console.log("stringToCategory")
-  console.log(value)
+  // console.log("stringToCategory")
+  // console.log(value)
   const match = Object.values(Categories).find(v => v === value);
   return (match as Categories) ?? Categories.Publications;
 }

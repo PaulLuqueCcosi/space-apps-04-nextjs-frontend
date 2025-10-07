@@ -80,12 +80,12 @@ export const GraphExample = () => {
 
     const handleNodeClick = (node: any) => {
         console.log('Nodo clickeado:', node);
-        alert(`Clickeaste: ${node.label}\nCategoría: ${node.data?.category}`);
+        // alert(`Clickeaste: ${node.label}\nCategoría: ${node.data?.category}`);
     };
 
     const handleEdgeClick = (edge: any) => {
         console.log('Edge clickeado:', edge);
-        alert(`Conexión: ${edge.label}`);
+        // alert(`Conexión: ${edge.label}`);
     };
 
     return (

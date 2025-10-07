@@ -29,6 +29,7 @@ export interface GraphData {
     totalEdges: number;
     categoriesQueried: Categories[];
   };
+  ai_response: string;
 }
 
 export interface GraphFilters {
