@@ -26,19 +26,19 @@ interface AIAssistantDrawerProps {
 const mockMessages: Message[] = [
     {
         id: '1',
-        content: '¡Hola! Soy Darwin AI, tu asistente para explorar datos científicos. Puedes preguntarme sobre cualquier tema y buscaré información relevante en la base de datos usando los filtros actuales. ¿En qué te puedo ayudar?',
+        content: 'Hello! I\'m Darwin AI, your assistant for exploring scientific data. You can ask me about any topic and I\'ll search for relevant information in the database using the current filters. How can I help you?',
         sender: 'ai',
         timestamp: new Date(Date.now() - 300000)
     }
 ];
 
 const recommendedQuestions = [
-    "machine learning",
-    "space exploration",
-    "climate change",
-    "artificial intelligence",
-    "quantum computing",
-    "renewable energy"
+    "How does spaceflight affect muscle and bone health in astronauts?",
+    "What are the effects of cosmic radiation on DNA and cancer risk?",
+    "How do plants adapt to microgravity conditions in space?",
+    // "artificial intelligence",
+    // "quantum computing",
+    // "renewable energy"
 ];
 
 export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) => {
@@ -97,7 +97,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
         try {
             // Llamar al servicio de AI
             const dataResponse = await generateAIResponse(currentInput);
-            const aiResponse = dataResponse?.ai_response || "Lo siento, ocurrió un error al procesar tu consulta. Por favor, intenta nuevamente."
+            const aiResponse = dataResponse?.ai_response || "Sorry, an error occurred while processing your query. Please try again."
             
             const aiMessage: Message = {
                 id: (Date.now() + 1).toString(),
@@ -119,7 +119,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
             
             const errorMessage: Message = {
                 id: (Date.now() + 1).toString(),
-                content: "Lo siento, ocurrió un error al procesar tu consulta. Por favor, intenta nuevamente.",
+                content: "Sorry, an error occurred while processing your query. Please try again.",
                 sender: 'ai',
                 timestamp: new Date()
             };
@@ -135,7 +135,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
     };
 
     const formatTime = (date: Date) => {
-        return date.toLocaleTimeString('es-ES', {
+        return date.toLocaleTimeString('en-US', {
             hour: '2-digit',
             minute: '2-digit'
         });
@@ -212,7 +212,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
                 <div className="p-4 border-t bg-gray-50">
                     <h3 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
                         <Sparkles className="w-4 h-4" />
-                        Búsquedas sugeridas
+                        Suggested Searches
                     </h3>
                     <div className="space-y-2">
                         {recommendedQuestions.slice(0, 3).map((question, index) => (
@@ -235,7 +235,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
                             value={inputMessage}
                             onChange={(e) => setInputMessage(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                            placeholder="Escribe tu búsqueda o pregunta..."
+                            placeholder="Type your search or question..."
                             className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             disabled={isTyping}
                         />
